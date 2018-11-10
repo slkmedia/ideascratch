@@ -22,7 +22,8 @@ export const IdeasListContainer = styled.div`
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-  padding: 16px 24px;
+  height: 55px;
+  padding: 0 0 0 24px;
   transition: 0.2s ease-in-out;
   width: 100%;
 
@@ -71,5 +72,32 @@ export const IdeaCreator = styled.input`
   &:focus, &:hover {
     border: 1px solid #0482FF;
     outline: none;
+  }
+`;
+
+export const IdeaUpvote = styled.button`
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  font-size: 14px;
+  display: block;
+  padding-left: 12px;
+  height: 100%;
+  transition: 0.2 ease-in-out;
+
+  span {
+    padding-left: 8px;
+  }
+  
+  &:hover, &:focus {
+    background-color: #8CD790;
+    border-left: 1px solid #ccc;
+    outline: none;
+  }
+
+  &:after {
+    content: '👍';
+    display: inline;
+    padding-left: 8px;
   }
 `;

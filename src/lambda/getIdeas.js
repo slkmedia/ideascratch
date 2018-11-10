@@ -1,10 +1,12 @@
 // show object spread works, i.e. babel works
 const ideas = [
   {
+    _id: 'ljsdfljsdk',
     name: 'my crazy idea',
     upvotes: 299
   },
   {
+    _id: 'dsfisdjfsd',
     name: 'my crazier idea',
     upvotes: 229
   }

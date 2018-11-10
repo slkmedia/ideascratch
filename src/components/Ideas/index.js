@@ -6,7 +6,8 @@ import {
   IdeasListContainer,
   IdeasListFront,
   IdeasHeader,
-  IdeaCreator
+  IdeaCreator,
+  IdeaUpvote
 } from './styled';
 
 export default class Ideas extends Component {
@@ -14,13 +15,59 @@ export default class Ideas extends Component {
   state = {
     authenticated: true,
     loading: true,
-    ideas: []
+    ideas: [],
+    ideasUpvoted: []
   }
 
   componentWillMount(){
     fetch('/.netlify/functions/getIdeas')
       .then(response => response.json())
-      .then(json => this.setState({ ideas: json.msg, load: false }));
+      .then((json) => {
+        this.setState({ ideas: json.msg, loading: false });
+
+        [...json.msg].forEach((item) => {
+          this.state.ideasUpvoted.push(false);
+        });
+      });
+
+      if(window.localStorage.getItem('upvoted') === null){
+        console.log('tests')
+        window.localStorage.setItem('upvoted', '');
+      }
+  }
+
+  upvote = (ideas, idx) => {
+    return() => { 
+
+        let ideasUpvoted = this.state.ideasUpvoted;
+        let upvotedLocal = window.localStorage.getItem('upvoted');
+
+        let upvotedLocalArr = upvotedLocal.split(',') || '';
+      
+
+        if(ideasUpvoted[idx] === false  && !upvotedLocalArr.includes(ideas[idx]._id)){
+          ideas[idx].upvotes++; 
+          ideasUpvoted[idx] = true;
+
+
+          if(upvotedLocal.length > 0){
+            upvotedLocal = upvotedLocal + ',' + ideas[idx]._id;
+          } else {
+            upvotedLocal = ideas[idx]._id;
+          }
+
+          window.localStorage.setItem('upvoted', upvotedLocal);
+
+          this.setState({
+            ideas: ideas,
+            ideasUpvoted: ideasUpvoted
+          });
+        } else {
+          console.log('You already upvoted this')
+        }
+
+
+    }
   }
 
   render(){
@@ -34,30 +81,33 @@ export default class Ideas extends Component {
           authenticated &&
           <IdeaCreator placeholder="Your amazing new idea..."/>
         }
-         <IdeasList>
         {
-          ideas.map(function(d){
-            return (
-              <IdeasListItem>
-                {
-                  authenticated &&
-                  <IdeasListFront>
-                    🗑  
-                  </IdeasListFront>
-                }
-                <IdeasListContainer>
-                  <p>
-                    {d.name}
-                  </p>
-                  <p>
-                    {d.upvotes} 👍
-                  </p>
-                </IdeasListContainer>
-              </IdeasListItem>
-            )
-          })
+          !loading &&
+          <IdeasList>
+          {
+            ideas.map((d, idx) => {
+              return (
+                <IdeasListItem>
+                  {
+                    authenticated &&
+                    <IdeasListFront>
+                      🗑  
+                    </IdeasListFront>
+                  }
+                  <IdeasListContainer>
+                    <p>
+                      {d.name}
+                    </p>
+                    <IdeaUpvote onClick={this.upvote(ideas, idx)}>
+                      <span>{d.upvotes}</span>
+                    </IdeaUpvote>
+                  </IdeasListContainer>
+                </IdeasListItem>
+              )
+            })
+          }
+          </IdeasList>
         }
-        </IdeasList>
       </Fragment>
     )
   }
