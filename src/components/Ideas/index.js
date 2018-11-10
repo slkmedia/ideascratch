@@ -20,7 +20,7 @@ export default class Ideas extends Component {
     return (
       <Fragment>
         <IdeasHeader>
-          💡 Ideas by <a href="#">#johnsmith</a>
+          💡 Ideas by <a href="#">@johnsmith</a>
         </IdeasHeader>
         {
           authenticated &&
