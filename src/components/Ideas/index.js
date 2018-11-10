@@ -12,11 +12,19 @@ import {
 export default class Ideas extends Component {
 
   state = {
-    authenticated: true
+    authenticated: true,
+    loading: true,
+    ideas: []
+  }
+
+  componentWillMount(){
+    fetch('/.netlify/functions/getIdeas')
+      .then(response => response.json())
+      .then(json => this.setState({ ideas: json.msg, load: false }));
   }
 
   render(){
-    const { authenticated } = this.state;
+    const { authenticated, loading, ideas } = this.state;
     return (
       <Fragment>
         <IdeasHeader>
@@ -26,43 +34,29 @@ export default class Ideas extends Component {
           authenticated &&
           <IdeaCreator placeholder="Your amazing new idea..."/>
         }
-        <IdeasList>
-          <IdeasListItem>
-            <IdeasListFront>
-              🗑  
-            </IdeasListFront>
-            <IdeasListContainer>
-              <p>
-                My crazy fucking Idea
-              </p>
-              <p>
-                200 👍
-              </p>
-            </IdeasListContainer>
-          </IdeasListItem>
-          <IdeasListItem>
-            <IdeasListFront>
-              🗑  
-            </IdeasListFront>
-            <IdeasListContainer>
-              <p>
-                My crazy fucking Idea
-              </p>
-              <p>
-                200 👍
-              </p>
-            </IdeasListContainer>
-          </IdeasListItem>
-          <IdeasListItem>
-            <IdeasListContainer>
-              <p>
-                My crazy fucking Idea
-              </p>
-              <p>
-                200 👍
-              </p>
-            </IdeasListContainer>
-          </IdeasListItem>
+         <IdeasList>
+        {
+          ideas.map(function(d){
+            return (
+              <IdeasListItem>
+                {
+                  authenticated &&
+                  <IdeasListFront>
+                    🗑  
+                  </IdeasListFront>
+                }
+                <IdeasListContainer>
+                  <p>
+                    {d.name}
+                  </p>
+                  <p>
+                    {d.upvotes} 👍
+                  </p>
+                </IdeasListContainer>
+              </IdeasListItem>
+            )
+          })
+        }
         </IdeasList>
       </Fragment>
     )
