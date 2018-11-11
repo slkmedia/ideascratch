@@ -10,6 +10,7 @@ export const IdeasListItem = styled.div`
   display: flex;
   justify-content: space-between;
   border-bottom: 1px solid #ccc;
+  overflow: hidden;
 
   &:last-child {
     border-bottom: none;
@@ -18,18 +19,13 @@ export const IdeasListItem = styled.div`
 
 export const IdeasListContainer = styled.div`
   align-items: center;
-  cursor: pointer;
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-  height: 55px;
+  height: 58px;
   padding: 0 0 0 24px;
   transition: 0.2s ease-in-out;
   width: 100%;
-
-  &:hover, &:focus {
-    background-color: #ECECEC;
-  }
 
   p {
     margin: 0;
@@ -77,13 +73,16 @@ export const IdeaCreator = styled.input`
 
 export const IdeaUpvote = styled.button`
   background-color: transparent;
-  border: none;
+  border-bottom: none;
+  border-left: 1px solid white;
+  border-right: none;
+  border-top: none;
   cursor: pointer;
   font-size: 14px;
   display: block;
-  padding-left: 12px;
+  padding: 0 12px;
   height: 100%;
-  transition: 0.2 ease-in-out;
+  transition: 0.2s ease-in-out;
 
   span {
     padding-left: 8px;
@@ -99,5 +98,29 @@ export const IdeaUpvote = styled.button`
     content: '👍';
     display: inline;
     padding-left: 8px;
+    transform: rotate(0deg);
+  }
+
+  &:focus {
+    animation: grow 0.5s;
+  }
+
+
+  @keyframes grow {
+    0% {
+      transform: scale(1);
+    }
+
+    60% {
+      transform: scale(1.2);
+    }
+
+    80% {
+      transform: scale(0.8);
+    }
+
+    100% {
+      transform: scale(1);
+    }
   }
 `;
