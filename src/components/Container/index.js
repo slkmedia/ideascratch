@@ -6,7 +6,13 @@ const Container = styled.div`
   color: #333;
   margin: 0 auto;
   max-width: 1000px;
-  width: 100%;
+  padding: 0 8px;
+  width: calc(100% - 16px);
+
+  @media(min-width: 768px){
+    padding: 0;
+    width: 100%;
+  }
 
   a {
     color: #0482FF;

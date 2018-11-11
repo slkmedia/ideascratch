@@ -4,11 +4,7 @@ export const HeaderContainer = styled.div`
   align-items: center;
   display: flex;
   justify-content: space-between;
-  padding: 16px 16px;
-
-  @media(min-width: 768px){
-    padding: 16px 0;
-  }
+  padding: 16px 0;
 `;
 
 export const Logo = styled.div`

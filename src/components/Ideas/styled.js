@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 
 export const IdeasList = styled.div`
   border: 1px solid #ccc;
@@ -104,6 +104,10 @@ export const IdeaUpvote = styled.button`
   &:focus {
     animation: grow 0.5s;
   }
+
+  ${props=> props.active && css`
+    background-color: #8CD790;
+  `}
 
 
   @keyframes grow {

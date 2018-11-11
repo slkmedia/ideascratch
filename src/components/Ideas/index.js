@@ -16,7 +16,8 @@ export default class Ideas extends Component {
     authenticated: true,
     loading: true,
     ideas: [],
-    ideasUpvoted: []
+    ideasUpvoted: [],
+    upvotedLocalStorage: window.localStorage.getItem('upvoted') || null
   }
 
   componentWillMount(){
@@ -30,9 +31,12 @@ export default class Ideas extends Component {
         });
       });
 
-      if(window.localStorage.getItem('upvoted') === null){
-        console.log('tests')
+      // Initiate local storage item if not already created
+      if(this.state.upvotedLocalStorage === null){
         window.localStorage.setItem('upvoted', '');
+        this.setState({
+          upvotedLocalStorage: window.localStorage.getItem('upvoted')
+        });
       }
   }
 
@@ -40,28 +44,32 @@ export default class Ideas extends Component {
     return() => { 
 
         let ideasUpvoted = this.state.ideasUpvoted;
-        let upvotedLocal = window.localStorage.getItem('upvoted');
-
-        let upvotedLocalArr = upvotedLocal.split(',') || '';
+        let upvotedLocalArr = this.state.upvotedLocalStorage.split(',');
       
-
         if(ideasUpvoted[idx] === false  && !upvotedLocalArr.includes(ideas[idx]._id)){
+          let tempStorage = null;
           ideas[idx].upvotes++; 
           ideasUpvoted[idx] = true;
 
-
-          if(upvotedLocal.length > 0){
-            upvotedLocal = upvotedLocal + ',' + ideas[idx]._id;
+          if(this.state.upvotedLocalStorage.length > 0){
+            tempStorage = this.state.upvotedLocalStorage + ',' + ideas[idx]._id;
+            this.setState({
+              upvotedLocalStorage: this.state.upvotedLocalStorage + ',' + ideas[idx]._id
+            });
           } else {
-            upvotedLocal = ideas[idx]._id;
+            tempStorage = ideas[idx]._id;
+            this.setState({
+              upvotedLocalStorage: ideas[idx]._id
+            });
           }
 
-          window.localStorage.setItem('upvoted', upvotedLocal);
+          window.localStorage.setItem('upvoted', tempStorage);
 
           this.setState({
             ideas: ideas,
             ideasUpvoted: ideasUpvoted
           });
+          
         } else {
           console.log('You already upvoted this')
         }
@@ -71,7 +79,7 @@ export default class Ideas extends Component {
   }
 
   render(){
-    const { authenticated, loading, ideas } = this.state;
+    const { authenticated, loading, ideas, upvotedLocalStorage } = this.state;
     return (
       <Fragment>
         <IdeasHeader>
@@ -98,7 +106,7 @@ export default class Ideas extends Component {
                     <p>
                       {d.name}
                     </p>
-                    <IdeaUpvote onClick={this.upvote(ideas, idx)}>
+                    <IdeaUpvote onClick={this.upvote(ideas, idx)} active={upvotedLocalStorage.includes(d._id)}>
                       <span>{d.upvotes}</span>
                     </IdeaUpvote>
                   </IdeasListContainer>
