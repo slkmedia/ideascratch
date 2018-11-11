@@ -11,9 +11,18 @@ export const IdeasListItem = styled.div`
   justify-content: space-between;
   border-bottom: 1px solid #ccc;
   overflow: hidden;
+  position: relative;
 
   &:last-child {
     border-bottom: none;
+  }
+
+  &:after {
+    content: 'High ✋';
+    position: absolute;
+    top: 30%;
+    right: 1.5%;
+    z-index: 1;
   }
 `;
 
@@ -85,6 +94,7 @@ export const IdeaUpvote = styled.button`
   transition: 0.2s ease-in-out;
   white-space: no-wrap;
   width: 35%;
+  z-index: 2;
 
   @media(min-width: 768px){
     width: 10%;
@@ -114,8 +124,25 @@ export const IdeaUpvote = styled.button`
   ${props=> props.active && css`
     background-color: #8CD790;
     border-left: 1px solid #ccc;
+
+    &:focus {
+      animation: reveal 1s;
+    }
   `}
 
+  @keyframes reveal {
+    0% {
+      transform: translateX(0px);
+    }
+
+    60% {
+      transform: translateX(200px);
+    }
+
+    100% {
+      transform: translateX(0px);
+    }
+  }
 
   @keyframes grow {
     0% {
