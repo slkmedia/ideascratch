@@ -83,7 +83,12 @@ export const IdeaUpvote = styled.button`
   padding: 0 12px;
   height: 100%;
   transition: 0.2s ease-in-out;
-  width: 10%;
+  white-space: no-wrap;
+  width: 35%;
+
+  @media(min-width: 768px){
+    width: 10%;
+  }
 
   span {
     padding-left: 8px;
@@ -97,7 +102,7 @@ export const IdeaUpvote = styled.button`
 
   &:after {
     content: '👍';
-    display: inline;
+    display: inline-block;
     padding-left: 8px;
     transform: rotate(0deg);
   }
