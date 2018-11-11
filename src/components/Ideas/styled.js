@@ -83,6 +83,7 @@ export const IdeaUpvote = styled.button`
   padding: 0 12px;
   height: 100%;
   transition: 0.2s ease-in-out;
+  width: 10%;
 
   span {
     padding-left: 8px;
@@ -107,6 +108,7 @@ export const IdeaUpvote = styled.button`
 
   ${props=> props.active && css`
     background-color: #8CD790;
+    border-left: 1px solid #ccc;
   `}
 
 
