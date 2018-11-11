@@ -81,7 +81,7 @@ export const IdeaCreator = styled.input`
 `;
 
 export const IdeaUpvote = styled.button`
-  background-color: transparent;
+  background-color: white;
   border-bottom: none;
   border-left: 1px solid white;
   border-right: none;
