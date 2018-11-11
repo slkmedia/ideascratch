@@ -117,10 +117,6 @@ export const IdeaUpvote = styled.button`
     transform: rotate(0deg);
   }
 
-  &:focus {
-    animation: grow 0.5s;
-  }
-
   ${props=> props.active && css`
     background-color: #8CD790;
     border-left: 1px solid #ccc;
@@ -141,24 +137,6 @@ export const IdeaUpvote = styled.button`
 
     100% {
       transform: translateX(0px);
-    }
-  }
-
-  @keyframes grow {
-    0% {
-      transform: scale(1);
-    }
-
-    60% {
-      transform: scale(1.2);
-    }
-
-    80% {
-      transform: scale(0.8);
-    }
-
-    100% {
-      transform: scale(1);
     }
   }
 `;

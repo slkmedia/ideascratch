@@ -3,7 +3,7 @@ const ideas = [
   {
     _id: 'ljsdfljsdk',
     name: 'my crazy idea',
-    upvotes: 299
+    upvotes: 0
   },
   {
     _id: 'dsfisdjfsd',
