@@ -1,26 +1,19 @@
-import React, { Component } from 'react';
+import React from 'react';
 
-import { HeaderContainer, Logo } from './styled';
-
+import { isAuthenticated } from '../../utils/auth';
 import LoginButton from '../LoginButton';
 import ProfileMenu from '../ProfileMenu';
+import { HeaderContainer, Logo } from './styled';
 
-export default class Header extends Component {
-  state = {
-    authenicated: false,
-  };
-
-  render() {
-    const { authenicated } = this.state;
-    return (
-      <HeaderContainer>
-        <Logo>IdeaScratch</Logo>
-        {authenicated ? (
-          <ProfileMenu imgSrc="http://placehold.it/64x64" />
-        ) : (
-          <LoginButton />
-        )}
-      </HeaderContainer>
-    );
-  }
+export default function Header() {
+  return (
+    <HeaderContainer>
+      <Logo>IdeaScratch</Logo>
+      {isAuthenticated() ? (
+        <ProfileMenu imgSrc="http://placehold.it/64x64" />
+      ) : (
+        <LoginButton />
+      )}
+    </HeaderContainer>
+  );
 }

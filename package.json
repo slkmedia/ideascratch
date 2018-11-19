@@ -3,6 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@reach/router": "^1.2.1",
+    "auth0-js": "^9.8.2",
+    "history": "^4.7.2",
     "react": "^16.6.1",
     "react-dom": "^16.6.1",
     "styled-components": "^4.0.3"

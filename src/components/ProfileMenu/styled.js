@@ -10,7 +10,7 @@ export const ProfileMenuButton = styled.button`
   margin-right: 32px;
   position: relative;
 
-  &:before {
+  &::before {
     content: '';
     background-color: #0482ff;
     border-radius: 0 4px 4px 0;
@@ -21,7 +21,7 @@ export const ProfileMenuButton = styled.button`
     width: 32px;
   }
 
-  &:after {
+  &::after {
     content: '';
     border-bottom: 3px solid white;
     border-right: 3px solid white;
@@ -33,11 +33,9 @@ export const ProfileMenuButton = styled.button`
     transform: rotate(45deg);
   }
 
-  &:hover,
-  &:focus {
-    &:before {
-      background-color: #0a79e7;
-    }
+  &:hover::before,
+  &:focus::before {
+    background-color: #0a79e7;
   }
 
   &:focus {
@@ -68,17 +66,21 @@ export const ProfileMenuDropDown = styled.ul`
   top: 64px;
   width: 180px;
 
-  li {
+  li:not(:last-child) {
     border-bottom: 1px solid #ccc;
-    cursor: pointer;
+  }
+
+  button {
+    display: block;
+    width: 100%;
     padding: 12px 16px;
+    border: none;
+    background-color: transparent;
     transition: all 0.2s ease-in-out;
+    cursor: pointer;
 
-    &:last-child {
-      border-bottom: none;
-    }
-
-    &:hover {
+    &:hover,
+    &:focus {
       background-color: #ccc;
     }
   }

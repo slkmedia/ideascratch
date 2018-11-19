@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 
+import { logout } from '../../utils/auth';
 import {
   ProfileMenuContainer,
   ProfileMenuButton,
@@ -45,8 +46,9 @@ export default class ProfileMenu extends Component {
         </ProfileMenuButton>
         {isOpen && (
           <ProfileMenuDropDown>
-            <li>Item 1</li>
-            <li>Item 2</li>
+            <li>
+              <button onClick={logout}>Logout</button>
+            </li>
           </ProfileMenuDropDown>
         )}
       </ProfileMenuContainer>
