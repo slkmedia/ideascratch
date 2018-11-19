@@ -5,7 +5,9 @@
   "dependencies": {
     "@reach/router": "^1.2.1",
     "auth0-js": "^9.8.2",
+    "dotenv": "^6.1.0",
     "history": "^4.7.2",
+    "mongoose": "^5.3.12",
     "react": "^16.6.1",
     "react-dom": "^16.6.1",
     "styled-components": "^4.0.3"

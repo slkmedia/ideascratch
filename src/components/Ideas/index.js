@@ -12,24 +12,40 @@ import {
 } from './styled';
 
 export default class Ideas extends Component {
-  state = {
-    authenticated: true,
-    loading: true,
-    ideas: [],
-    ideasUpvoted: [],
-    upvotedLocalStorage: window.localStorage.getItem('upvoted') || null,
-  };
+  
+  constructor(props){
+    super(props);
+
+    this.state = {
+      authenticated: true,
+      loading: true,
+      ideas: [],
+      ideasUpvoted: [],
+      upvotedLocalStorage: window.localStorage.getItem('upvoted') || null,
+      value: ''
+    };
+
+    this.handleChange = this.handleChange.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
+
+  }
 
   componentWillMount() {
     fetch('/.netlify/functions/getIdeas')
-      .then(response => response.json())
+      .then(response => { 
+        if (!response.ok) { throw response }
+        return response.json()
+      })
       .then(json => {
+        console.log(json)
         const newIdeasUpvoted = [...json.msg].map(() => false);
         this.setState({
           ideas: json.msg,
           loading: false,
           ideasUpvoted: [...this.state.ideasUpvoted, ...newIdeasUpvoted],
         });
+      }).catch(err => {
+        console.log(err)
       });
 
     // Initiate local storage item if not already created
@@ -73,13 +89,36 @@ export default class Ideas extends Component {
         ideas: ideas,
         ideasUpvoted: ideasUpvoted,
       });
+
+      // Add upvote to server here
     } else {
       console.log('You already upvoted this');
     }
   };
 
+  handleChange(event){
+    this.setState({
+      value: event.target.value
+    })
+  }
+
+  handleSubmit(event){
+    event.preventDefault();
+    
+    fetch('/.netlify/functions/createIdea', {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        idea: this.state.value
+      })
+    })
+  }
+
   render() {
-    const { authenticated, loading, ideas, upvotedLocalStorage } = this.state;
+    const { authenticated, loading, ideas, upvotedLocalStorage, value } = this.state;
     return (
       <Fragment>
         <IdeasHeader>
@@ -90,7 +129,9 @@ export default class Ideas extends Component {
         </IdeasHeader>
 
         {authenticated && (
-          <IdeaCreator placeholder="Your amazing new idea..." />
+          <form onSubmit={this.handleSubmit}>
+            <IdeaCreator placeholder="Your amazing new idea..." value={value} onChange={this.handleChange}/>
+          </form>
         )}
 
         {!loading && (

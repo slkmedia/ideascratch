@@ -1,20 +1,32 @@
-const ideas = [
-  {
-    _id: 'ljsdfljsdk',
-    name: 'my crazy idea',
-    upvotes: 0,
-  },
-  {
-    _id: 'dsfisdjfsd',
-    name: 'my crazier idea',
-    upvotes: 229,
-  },
-];
+require('dotenv').config();
+const mongoose = require('mongoose');
 
-export function handler(event, context, callback) {
-  console.log('queryStringParameters', event.queryStringParameters);
+let conn = null;
+
+export async function handler(event, context, callback) {
+
+  context.callbackWaitsForEmptyEventLoop = false;
+
+  if(conn === null) {
+    conn = await mongoose.createConnection(
+      process.env.MONGO_URI, {
+      useNewUrlParser: true,
+      bufferCommands: false, 
+      bufferMaxEntries: 0 
+    });
+
+    conn.model('Idea', {
+      name: String,
+      upvotes: Number
+    });
+  }
+
+  const ideasModel = conn.model('Idea');
+
+  const doc = await ideasModel.find();
+
   callback(null, {
     statusCode: 200,
-    body: JSON.stringify({ msg: ideas }),
+    body: JSON.stringify({ msg: doc })
   });
 }
