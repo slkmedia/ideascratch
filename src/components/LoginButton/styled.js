@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 
 export const LoginButton = styled.button`
-  background-color: #0482FF;
+  background-color: #0482ff;
   border: none;
   border-radius: 4px;
   color: white;
@@ -10,8 +10,9 @@ export const LoginButton = styled.button`
   padding: 12px 16px;
   transition: all 0.2s ease-in-out;
 
-  &:hover, &:focus {
-    background-color: #0A79E7;
+  &:hover,
+  &:focus {
+    background-color: #0a79e7;
   }
 
   &:focus {

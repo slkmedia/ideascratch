@@ -1,5 +1,4 @@
-import styled from "styled-components";
-
+import styled from 'styled-components';
 
 const Container = styled.div`
   font-family: Helvetica, Arial, sans-serif;
@@ -9,15 +8,15 @@ const Container = styled.div`
   padding: 0 8px;
   width: calc(100% - 16px);
 
-  @media(min-width: 768px){
+  @media (min-width: 768px) {
     padding: 0;
     width: 100%;
   }
 
   a {
-    color: #0482FF;
+    color: #0482ff;
     text-decoration: none;
-    
+
     &:hover {
       text-decoration: underline;
     }

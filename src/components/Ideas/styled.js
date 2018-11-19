@@ -46,8 +46,11 @@ export const IdeasHeader = styled.h1`
   font-weight: bold;
 `;
 
-export const IdeasListFront = styled.div`
+export const IdeasListFront = styled.button`
   align-items: center;
+  border-top: none;
+  border-bottom: none;
+  border-left: none;
   border-right: 1px solid #ccc;
   cursor: pointer;
   display: flex;
@@ -55,15 +58,19 @@ export const IdeasListFront = styled.div`
   padding: 16px 0;
   transition: 0.2s ease-in-out;
   width: 80px;
+  height: 58px;
+  font-size: 18px;
+  background-color: transparent;
 
-  &:hover, &:focus {
+  &:hover,
+  &:focus {
     background-color: #f15c5c;
   }
 `;
 
 export const IdeaCreator = styled.input`
   border: 1px solid #ccc;
-  background-color: #ECECEC;
+  background-color: #ececec;
   border-radius: 4px;
   display: block;
   font-size: 24px;
@@ -74,8 +81,9 @@ export const IdeaCreator = styled.input`
   transition: 0.2s ease-in-out;
   width: calc(100% - 48px);
 
-  &:focus, &:hover {
-    border: 1px solid #0482FF;
+  &:focus,
+  &:hover {
+    border: 1px solid #0482ff;
     outline: none;
   }
 `;
@@ -96,16 +104,17 @@ export const IdeaUpvote = styled.button`
   width: 35%;
   z-index: 2;
 
-  @media(min-width: 768px){
+  @media (min-width: 768px) {
     width: 10%;
   }
 
   span {
     padding-left: 8px;
   }
-  
-  &:hover, &:focus {
-    background-color: #8CD790;
+
+  &:hover,
+  &:focus {
+    background-color: #8cd790;
     border-left: 1px solid #ccc;
     outline: none;
   }
@@ -117,14 +126,16 @@ export const IdeaUpvote = styled.button`
     transform: rotate(0deg);
   }
 
-  ${props=> props.active && css`
-    background-color: #8CD790;
-    border-left: 1px solid #ccc;
+  ${props =>
+    props.active &&
+    css`
+      background-color: #8cd790;
+      border-left: 1px solid #ccc;
 
-    &:focus {
-      animation: reveal 1s;
-    }
-  `}
+      &:focus {
+        animation: reveal 1s;
+      }
+    `}
 
   @keyframes reveal {
     0% {

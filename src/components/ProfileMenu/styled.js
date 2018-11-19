@@ -12,7 +12,7 @@ export const ProfileMenuButton = styled.button`
 
   &:before {
     content: '';
-    background-color: #0482FF;
+    background-color: #0482ff;
     border-radius: 0 4px 4px 0;
     height: 64px;
     position: absolute;
@@ -33,9 +33,10 @@ export const ProfileMenuButton = styled.button`
     transform: rotate(45deg);
   }
 
-  &:hover, &:focus {
+  &:hover,
+  &:focus {
     &:before {
-      background-color:  #0A79E7;
+      background-color: #0a79e7;
     }
   }
 
@@ -66,7 +67,6 @@ export const ProfileMenuDropDown = styled.ul`
   right: -32px;
   top: 64px;
   width: 180px;
-
 
   li {
     border-bottom: 1px solid #ccc;

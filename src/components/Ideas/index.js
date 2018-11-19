@@ -1,5 +1,6 @@
 import React, { Component, Fragment } from 'react';
 
+import { AccessibleText } from '../ScreenReader';
 import {
   IdeasList,
   IdeasListItem,
@@ -7,116 +8,125 @@ import {
   IdeasListFront,
   IdeasHeader,
   IdeaCreator,
-  IdeaUpvote
+  IdeaUpvote,
 } from './styled';
 
 export default class Ideas extends Component {
-
   state = {
     authenticated: true,
     loading: true,
     ideas: [],
     ideasUpvoted: [],
-    upvotedLocalStorage: window.localStorage.getItem('upvoted') || null
-  }
+    upvotedLocalStorage: window.localStorage.getItem('upvoted') || null,
+  };
 
-  componentWillMount(){
+  componentWillMount() {
     fetch('/.netlify/functions/getIdeas')
       .then(response => response.json())
-      .then((json) => {
-        this.setState({ ideas: json.msg, loading: false });
-
-        [...json.msg].forEach((item) => {
-          this.state.ideasUpvoted.push(false);
+      .then(json => {
+        const newIdeasUpvoted = [...json.msg].map(() => false);
+        this.setState({
+          ideas: json.msg,
+          loading: false,
+          ideasUpvoted: [...this.state.ideasUpvoted, ...newIdeasUpvoted],
         });
       });
 
-      // Initiate local storage item if not already created
-      if(this.state.upvotedLocalStorage === null){
-        window.localStorage.setItem('upvoted', '');
-        this.setState({
-          upvotedLocalStorage: window.localStorage.getItem('upvoted')
-        });
-      }
-  }
-
-  upvote = (ideas, idx) => {
-    return() => { 
-
-        let ideasUpvoted = this.state.ideasUpvoted;
-        let upvotedLocalArr = this.state.upvotedLocalStorage.split(',');
-      
-        if(ideasUpvoted[idx] === false  && !upvotedLocalArr.includes(ideas[idx]._id)){
-          let tempStorage = null;
-          ideas[idx].upvotes++; 
-          ideasUpvoted[idx] = true;
-
-          if(this.state.upvotedLocalStorage.length > 0){
-            tempStorage = this.state.upvotedLocalStorage + ',' + ideas[idx]._id;
-            this.setState({
-              upvotedLocalStorage: this.state.upvotedLocalStorage + ',' + ideas[idx]._id
-            });
-          } else {
-            tempStorage = ideas[idx]._id;
-            this.setState({
-              upvotedLocalStorage: ideas[idx]._id
-            });
-          }
-
-          window.localStorage.setItem('upvoted', tempStorage);
-
-          this.setState({
-            ideas: ideas,
-            ideasUpvoted: ideasUpvoted
-          });
-          
-        } else {
-          console.log('You already upvoted this')
-        }
-
-
+    // Initiate local storage item if not already created
+    if (this.state.upvotedLocalStorage === null) {
+      window.localStorage.setItem('upvoted', '');
+      this.setState({
+        upvotedLocalStorage: window.localStorage.getItem('upvoted'),
+      });
     }
   }
 
-  render(){
+  upvote = (ideas, index) => {
+    let ideasUpvoted = this.state.ideasUpvoted;
+    let upvotedLocalArr = this.state.upvotedLocalStorage.split(',');
+
+    if (
+      ideasUpvoted[index] === false &&
+      !upvotedLocalArr.includes(ideas[index]._id)
+    ) {
+      let tempStorage = null;
+      ideas[index].upvotes++;
+      ideasUpvoted[index] = true;
+
+      if (this.state.upvotedLocalStorage.length > 0) {
+        tempStorage = `${this.state.upvotedLocalStorage},${ideas[index]._id}`;
+        this.setState({
+          upvotedLocalStorage: `${this.state.upvotedLocalStorage},${
+            ideas[index]._id
+          }`,
+        });
+      } else {
+        tempStorage = ideas[index]._id;
+        this.setState({
+          upvotedLocalStorage: ideas[index]._id,
+        });
+      }
+
+      window.localStorage.setItem('upvoted', tempStorage);
+
+      this.setState({
+        ideas: ideas,
+        ideasUpvoted: ideasUpvoted,
+      });
+    } else {
+      console.log('You already upvoted this');
+    }
+  };
+
+  render() {
     const { authenticated, loading, ideas, upvotedLocalStorage } = this.state;
     return (
       <Fragment>
         <IdeasHeader>
-          💡 Ideas by <a href="#">@johnsmith</a>
+          <span role="img" aria-label="">
+            💡
+          </span>{' '}
+          Ideas by <a href="/johnsmith">@johnsmith</a>
         </IdeasHeader>
-        {
-          authenticated &&
-          <IdeaCreator placeholder="Your amazing new idea..."/>
-        }
-        {
-          !loading &&
+
+        {authenticated && (
+          <IdeaCreator placeholder="Your amazing new idea..." />
+        )}
+
+        {!loading && (
           <IdeasList>
-          {
-            ideas.map((d, idx) => {
+            {ideas.map((idea, index) => {
               return (
-                <IdeasListItem>
-                  {
-                    authenticated &&
+                <IdeasListItem key={idea._id}>
+                  {authenticated && (
                     <IdeasListFront>
-                      🗑  
+                      <span role="img" aria-label="Delete Idea">
+                        🗑
+                      </span>
                     </IdeasListFront>
-                  }
+                  )}
                   <IdeasListContainer>
-                    <p>
-                      {d.name}
-                    </p>
-                    <IdeaUpvote onClick={this.upvote(ideas, idx)} active={upvotedLocalStorage.includes(d._id)}>
-                      <span>{d.upvotes}</span>
+                    <p>{idea.name}</p>
+                    <IdeaUpvote
+                      onClick={() => this.upvote(ideas, index)}
+                      active={upvotedLocalStorage.includes(idea._id)}
+                      aria-label={`Delete ${idea.name}`}
+                    >
+                      <span>
+                        <AccessibleText as="span">
+                          {idea.name} has{' '}
+                        </AccessibleText>
+                        {idea.upvotes}
+                        <AccessibleText as="span"> upvotes</AccessibleText>
+                      </span>
                     </IdeaUpvote>
                   </IdeasListContainer>
                 </IdeasListItem>
-              )
-            })
-          }
+              );
+            })}
           </IdeasList>
-        }
+        )}
       </Fragment>
-    )
+    );
   }
 }

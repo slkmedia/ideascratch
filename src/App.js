@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { Component } from 'react';
 
 // Component Imports
 import Container from './components/Container';
@@ -9,11 +9,11 @@ import Footer from './components/Footer';
 class App extends Component {
   render() {
     return (
-    <Container>
-      <Header />
-      <Ideas />
-      <Footer />
-    </Container>
+      <Container>
+        <Header />
+        <Ideas />
+        <Footer />
+      </Container>
     );
   }
 }
