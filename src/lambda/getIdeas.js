@@ -20,7 +20,6 @@ export async function handler(event, context, callback) {
       upvotes: Number
     });
   }
-
   const ideasModel = conn.model('Idea');
 
   const doc = await ideasModel.find();
@@ -29,4 +28,5 @@ export async function handler(event, context, callback) {
     statusCode: 200,
     body: JSON.stringify({ msg: doc })
   });
+
 }

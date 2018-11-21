@@ -30,6 +30,13 @@ export async function handler(event, context, callback) {
   ideaItem =  await ideasModel.findByIdAndDelete(id);
 
   ideaItem.save().then(() => {
-    console.log('idea Deleted')
+    callback(null, {
+      statusCode: 200,
+    });
+  }).catch((err) => {
+    callback(null, {
+      statusCode: 500,
+    });
   })
+
 }

@@ -148,6 +148,8 @@ export default class Ideas extends Component {
 
   handleSubmit(event){
     event.preventDefault();
+
+    if(this.state.value === '') return;
     
     fetch('/.netlify/functions/createIdea', {
       method: 'POST',

@@ -1,24 +1,44 @@
 require('dotenv').config();
 const mongoose = require('mongoose');
 
-mongoose.connect(process.env.MONGO_URI, {
-  useNewUrlParser: true
-});
+let conn = null;
 
-const Idea = mongoose.model('Idea', {
-  name: String,
-  upvotes: Number
-});
+export async function handler(event, context, callback) {
 
-export function handler(event, context, callback) {
+  context.callbackWaitsForEmptyEventLoop = false;
+
   let idea  = JSON.parse(event.body).idea.trim();
 
-  const item = new Idea({
+  if(conn === null) {
+    conn = await mongoose.createConnection(
+      process.env.MONGO_URI, {
+      useNewUrlParser: true,
+      bufferCommands: false, 
+      bufferMaxEntries: 0 
+    });
+
+    conn.model('Idea', {
+      name: String,
+      upvotes: Number
+    });
+  }
+
+  const ideasModel = conn.model('Idea');
+  
+  const item = new ideasModel({
     name: idea,
     upvotes: 0
   });
 
   item.save().then(() => {
-    console.log('idea Created')
+    callback(null, {
+      statusCode: 200,
+    });
+  }).catch((err) => {
+    callback(null, {
+      statusCode: 500,
+    });
   })
+  
+
 }
