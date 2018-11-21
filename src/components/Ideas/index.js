@@ -65,6 +65,18 @@ export default class Ideas extends Component {
       ideasUpvoted[index] === false &&
       !upvotedLocalArr.includes(ideas[index]._id)
     ) {
+
+      fetch('/.netlify/functions/upvote', {
+        method: 'POST',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          id: ideas[index]._id
+        })
+      });
+      
       let tempStorage = null;
       ideas[index].upvotes++;
       ideasUpvoted[index] = true;
@@ -90,7 +102,6 @@ export default class Ideas extends Component {
         ideasUpvoted: ideasUpvoted,
       });
 
-      // Add upvote to server here
     } else {
       console.log('You already upvoted this');
     }
