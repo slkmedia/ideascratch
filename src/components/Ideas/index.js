@@ -31,13 +31,25 @@ export default class Ideas extends Component {
   }
 
   componentWillMount() {
+    
+    this.getIdeas();
+
+    // Initiate local storage item if not already created
+    if (this.state.upvotedLocalStorage === null) {
+      window.localStorage.setItem('upvoted', '');
+      this.setState({
+        upvotedLocalStorage: window.localStorage.getItem('upvoted'),
+      });
+    }
+  }
+
+  getIdeas(){
     fetch('/.netlify/functions/getIdeas')
       .then(response => { 
         if (!response.ok) { throw response }
         return response.json()
       })
       .then(json => {
-        console.log(json)
         const newIdeasUpvoted = [...json.msg].map(() => false);
         this.setState({
           ideas: json.msg,
@@ -47,14 +59,6 @@ export default class Ideas extends Component {
       }).catch(err => {
         console.log(err)
       });
-
-    // Initiate local storage item if not already created
-    if (this.state.upvotedLocalStorage === null) {
-      window.localStorage.setItem('upvoted', '');
-      this.setState({
-        upvotedLocalStorage: window.localStorage.getItem('upvoted'),
-      });
-    }
   }
 
   upvote = (ideas, index) => {
@@ -118,6 +122,22 @@ export default class Ideas extends Component {
         id: id
       })
     })
+
+    const indexToRemove = this.getItem(id);
+
+    this.setState({
+      ideas: [...this.state.ideas.slice(0, indexToRemove), ...this.state.ideas.slice(indexToRemove + 1)]
+    })
+  }
+
+  getItem(id){
+    let item;
+    [...this.state.ideas].forEach((idea,index) => {
+      if(idea._id === id){
+        item = index;
+      }
+    })
+    return item;
   }
 
   handleChange(event){
@@ -139,6 +159,12 @@ export default class Ideas extends Component {
         idea: this.state.value
       })
     })
+
+    this.setState({
+      value: ''
+    })
+
+    this.getIdeas();
   }
 
   render() {
