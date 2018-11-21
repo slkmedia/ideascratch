@@ -76,7 +76,7 @@ export default class Ideas extends Component {
           id: ideas[index]._id
         })
       });
-      
+
       let tempStorage = null;
       ideas[index].upvotes++;
       ideasUpvoted[index] = true;
@@ -106,6 +106,19 @@ export default class Ideas extends Component {
       console.log('You already upvoted this');
     }
   };
+
+  deleteIdea = (id) => {
+    fetch('/.netlify/functions/deleteIdea', {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        id: id
+      })
+    })
+  }
 
   handleChange(event){
     this.setState({
@@ -152,7 +165,7 @@ export default class Ideas extends Component {
                 <IdeasListItem key={idea._id}>
                   {authenticated && (
                     <IdeasListFront>
-                      <span role="img" aria-label="Delete Idea">
+                      <span role="img" aria-label="Delete Idea" onClick={() => this.deleteIdea(idea._id)}>
                         🗑
                       </span>
                     </IdeasListFront>
