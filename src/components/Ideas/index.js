@@ -12,8 +12,7 @@ import {
 } from './styled';
 
 export default class Ideas extends Component {
-  
-  constructor(props){
+  constructor(props) {
     super(props);
 
     this.state = {
@@ -21,19 +20,15 @@ export default class Ideas extends Component {
       loading: true,
       ideas: [],
       ideasUpvoted: [],
-      upvotedLocalStorage: window.localStorage.getItem('upvoted') || null,
-      value: ''
+      upvotedLocalStorage: window.localStorage.getItem('upvoted') || '',
+      value: '',
     };
 
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
-
   }
 
-  componentWillMount() {
-    
-    this.getIdeas();
-
+  async componentDidMount() {
     // Initiate local storage item if not already created
     if (this.state.upvotedLocalStorage === null) {
       window.localStorage.setItem('upvoted', '');
@@ -41,24 +36,30 @@ export default class Ideas extends Component {
         upvotedLocalStorage: window.localStorage.getItem('upvoted'),
       });
     }
+
+    await this.getIdeas();
   }
 
-  getIdeas(){
-    fetch('/.netlify/functions/getIdeas')
-      .then(response => { 
-        if (!response.ok) { throw response }
-        return response.json()
-      })
-      .then(json => {
-        const newIdeasUpvoted = [...json.msg].map(() => false);
-        this.setState({
-          ideas: json.msg,
-          loading: false,
-          ideasUpvoted: [...this.state.ideasUpvoted, ...newIdeasUpvoted],
-        });
-      }).catch(err => {
-        console.log(err)
-      });
+  async getIdeas() {
+    const { user } = this.props;
+    const response = await fetch(
+      `/.netlify/functions/getIdeas?userId=${user._id}`,
+    ).catch(error => {
+      throw new Error('Unable to fetch ideas.');
+    });
+
+    if (!response.ok) throw new Error('Unable to fetch ideas.');
+
+    const json = await response.json();
+    const newIdeasUpvoted = [...json.msg].map(() => false);
+
+    console.log('IDEAS JSON', json);
+
+    this.setState({
+      ideas: json.msg,
+      loading: false,
+      ideasUpvoted: [...this.state.ideasUpvoted, ...newIdeasUpvoted],
+    });
   }
 
   upvote = (ideas, index) => {
@@ -69,16 +70,15 @@ export default class Ideas extends Component {
       ideasUpvoted[index] === false &&
       !upvotedLocalArr.includes(ideas[index]._id)
     ) {
-
       fetch('/.netlify/functions/upvote', {
         method: 'POST',
         headers: {
-          'Accept': 'application/json',
+          Accept: 'application/json',
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          id: ideas[index]._id
-        })
+          id: ideas[index]._id,
+        }),
       });
 
       let tempStorage = null;
@@ -105,84 +105,102 @@ export default class Ideas extends Component {
         ideas: ideas,
         ideasUpvoted: ideasUpvoted,
       });
-
     } else {
       console.log('You already upvoted this');
     }
   };
 
-  deleteIdea = (id) => {
+  deleteIdea = id => {
     fetch('/.netlify/functions/deleteIdea', {
       method: 'POST',
       headers: {
-        'Accept': 'application/json',
+        Accept: 'application/json',
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        id: id
-      })
-    })
+        id: id,
+      }),
+    });
 
     const indexToRemove = this.getItem(id);
 
     this.setState({
-      ideas: [...this.state.ideas.slice(0, indexToRemove), ...this.state.ideas.slice(indexToRemove + 1)]
-    })
-  }
+      ideas: [
+        ...this.state.ideas.slice(0, indexToRemove),
+        ...this.state.ideas.slice(indexToRemove + 1),
+      ],
+    });
+  };
 
-  getItem(id){
+  getItem(id) {
     let item;
-    [...this.state.ideas].forEach((idea,index) => {
-      if(idea._id === id){
+    [...this.state.ideas].forEach((idea, index) => {
+      if (idea._id === id) {
         item = index;
       }
-    })
+    });
     return item;
   }
 
-  handleChange(event){
+  handleChange(event) {
     this.setState({
-      value: event.target.value
-    })
+      value: event.target.value,
+    });
   }
 
-  handleSubmit(event){
+  async handleSubmit(event) {
     event.preventDefault();
 
-    if(this.state.value === '') return;
-    
-    fetch('/.netlify/functions/createIdea', {
+    if (this.state.value === '') return;
+
+    const { user } = this.props;
+
+    const savedIdea = await fetch('/.netlify/functions/createIdea', {
       method: 'POST',
       headers: {
-        'Accept': 'application/json',
+        Accept: 'application/json',
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        idea: this.state.value
-      })
-    })
+        idea: this.state.value,
+        userId: user._id,
+      }),
+    });
 
-    this.setState({
-      value: ''
-    })
+    console.log('SAVED', await savedIdea.json());
 
-    this.getIdeas();
+    this.setState({ value: '' });
+
+    await this.getIdeas();
   }
 
   render() {
-    const { authenticated, loading, ideas, upvotedLocalStorage, value } = this.state;
+    const { user } = this.props;
+    const {
+      authenticated,
+      loading,
+      ideas,
+      upvotedLocalStorage,
+      value,
+    } = this.state;
+
     return (
       <Fragment>
         <IdeasHeader>
           <span role="img" aria-label="">
             💡
           </span>{' '}
-          Ideas by <a href="/johnsmith">@johnsmith</a>
+          Ideas by{' '}
+          <a href={`https://twitter.com/${user.username}`}>@{user.username}</a>
         </IdeasHeader>
 
         {authenticated && (
           <form onSubmit={this.handleSubmit}>
-            <IdeaCreator placeholder="Your amazing new idea..." value={value} onChange={this.handleChange}/>
+            <IdeaCreator
+              placeholder="Your amazing new idea..."
+              value={value}
+              onChange={this.handleChange}
+            />
           </form>
         )}
 
@@ -193,7 +211,11 @@ export default class Ideas extends Component {
                 <IdeasListItem key={idea._id}>
                   {authenticated && (
                     <IdeasListFront>
-                      <span role="img" aria-label="Delete Idea" onClick={() => this.deleteIdea(idea._id)}>
+                      <span
+                        role="img"
+                        aria-label="Delete Idea"
+                        onClick={() => this.deleteIdea(idea._id)}
+                      >
                         🗑
                       </span>
                     </IdeasListFront>

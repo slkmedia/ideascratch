@@ -8,7 +8,7 @@ const auth0 = new auth0Lib.WebAuth({
   clientID: process.env.REACT_APP_AUTH0_CLIENT_ID,
   redirectUri: process.env.REACT_APP_AUTH0_REDIRECT_URI,
   responseType: 'token id_token',
-  scope: 'openid',
+  scope: 'openid profile',
 });
 
 export function login() {
@@ -36,9 +36,25 @@ export function logout() {
   window.location = HOME_ROUTE;
 }
 
+export function getAccessToken() {
+  const accessToken = localStorage.getItem('access_token');
+  if (!accessToken) throw new Error('No Access Token found');
+  return accessToken;
+}
+
 export function isAuthenticated() {
   const expiresAt = JSON.parse(localStorage.getItem('expires_at'));
   return new Date().getTime() < expiresAt;
+}
+
+export async function getProfile() {
+  const accessToken = getAccessToken();
+  return new Promise((resolve, reject) => {
+    auth0.client.userInfo(accessToken, (error, userInfo) => {
+      if (error) reject(new Error(error.original));
+      resolve(userInfo);
+    });
+  });
 }
 
 function setSession(authResult) {

@@ -21,6 +21,7 @@
   },
   "scripts": {
     "start": "run-p start:**",
+    "dev": "run-p start:**",
     "build": "run-p build:**",
     "test": "react-scripts test",
     "eject": "react-scripts eject",

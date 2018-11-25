@@ -6,13 +6,19 @@ let conn = null;
 export async function handler(event, context, callback) {
   context.callbackWaitsForEmptyEventLoop = false;
 
-  const idea = JSON.parse(event.body).idea.trim();
-  const userId = JSON.parse(event.body).userId;
+  const twitterUsername = JSON.parse(event.body).twitterUsername;
+  const twitterName = JSON.parse(event.body).twitterName;
+  const twitterId = JSON.parse(event.body).twitterId;
 
-  if (!userId) {
+  if (!twitterName || !twitterId || !twitterUsername) {
     callback(null, {
       statusCode: 500,
+      body: JSON.stringify({
+        message: 'Required data missing: name, twitterUsername, twitterId',
+      }),
     });
+
+    return;
   }
 
   if (conn === null) {
@@ -22,21 +28,19 @@ export async function handler(event, context, callback) {
       bufferMaxEntries: 0,
     });
 
-    conn.model('Idea', {
-      userId: String,
+    conn.model('User', {
       name: String,
-      upvotes: Number,
+      username: String,
       twitterId: String,
-      twitterName: String,
     });
   }
 
-  const ideasModel = conn.model('Idea');
+  const usersModel = conn.model('User');
 
-  const item = new ideasModel({
-    name: idea,
-    upvotes: 0,
-    userId,
+  const item = new usersModel({
+    name: twitterName,
+    username: twitterUsername,
+    twitterId,
   });
 
   item
@@ -44,7 +48,6 @@ export async function handler(event, context, callback) {
     .then(() => {
       callback(null, {
         statusCode: 200,
-        body: JSON.stringify(item),
       });
     })
     .catch(err => {
