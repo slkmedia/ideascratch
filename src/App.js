@@ -15,20 +15,15 @@ class App extends Component {
   };
 
   async componentDidMount() {
-    // TODO: Get based on dashboard or profile view
     const loggedInUser = await getProfile().catch(error => {
       console.error('Could not fetch profile', error);
     });
-
-    console.log('LOGGED IN PROFILE', loggedInUser);
 
     if (!loggedInUser) return;
 
     const twitterId = loggedInUser.sub.split('|')[1];
     const twitterName = loggedInUser.name;
     const twitterUsername = loggedInUser.nickname;
-
-    console.log('logged in data', { twitterId, twitterName, twitterUsername });
 
     const response = await fetch(
       `/.netlify/functions/getUser?username=${twitterUsername}`,
@@ -39,8 +34,6 @@ class App extends Component {
     if (!response.ok) return;
 
     const user = await response.json();
-
-    console.log('USER', user);
 
     if (!user) {
       await fetch('/.netlify/functions/createUser', {
@@ -66,8 +59,8 @@ class App extends Component {
       <Container>
         <Header profile={loggedInUser} />
         <Router>
-          <HomePage profile={loggedInUser} path="/" />
-          <ProfilePage path="/:username" />
+          <HomePage loggedInUser={loggedInUser} path="/" />
+          <ProfilePage loggedInUser={loggedInUser} path="/:username" />
           <CallbackPage path="/callback" />
         </Router>
         <Footer />

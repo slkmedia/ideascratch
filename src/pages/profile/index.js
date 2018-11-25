@@ -9,8 +9,6 @@ export default class ProfilePage extends Component {
   async componentDidMount() {
     const { username } = this.props;
 
-    console.log('username', username);
-
     const response = await fetch(
       `/.netlify/functions/getUser?username=${username}`,
     ).catch(error => {
@@ -21,13 +19,16 @@ export default class ProfilePage extends Component {
 
     const user = await response.json();
 
-    console.log('USER', user);
-
     this.setState({ user });
   }
 
   render() {
+    const { loggedInUser } = this.props;
     const { user } = this.state;
-    return <Fragment>{user ? <Ideas user={user} /> : 'No user id'}</Fragment>;
+    return (
+      <Fragment>
+        {user ? <Ideas user={user} loggedInUser={loggedInUser} /> : null}
+      </Fragment>
+    );
   }
 }

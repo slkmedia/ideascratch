@@ -16,16 +16,13 @@ export default class Ideas extends Component {
     super(props);
 
     this.state = {
-      authenticated: true,
+      isEditable: false,
       loading: true,
       ideas: [],
       ideasUpvoted: [],
       upvotedLocalStorage: window.localStorage.getItem('upvoted') || '',
       value: '',
     };
-
-    this.handleChange = this.handleChange.bind(this);
-    this.handleSubmit = this.handleSubmit.bind(this);
   }
 
   async componentDidMount() {
@@ -40,6 +37,17 @@ export default class Ideas extends Component {
     await this.getIdeas();
   }
 
+  // Checks if user is allowed to edit this profile.
+  static getDerivedStateFromProps(props) {
+    const { loggedInUser, user } = props;
+    if (loggedInUser && loggedInUser.sub) {
+      const twitterId = loggedInUser.sub.split('|')[1];
+      return {
+        isEditable: user.twitterId === twitterId,
+      };
+    }
+  }
+
   async getIdeas() {
     const { user } = this.props;
     const response = await fetch(
@@ -52,8 +60,6 @@ export default class Ideas extends Component {
 
     const json = await response.json();
     const newIdeasUpvoted = [...json.msg].map(() => false);
-
-    console.log('IDEAS JSON', json);
 
     this.setState({
       ideas: json.msg,
@@ -118,7 +124,7 @@ export default class Ideas extends Component {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        id: id,
+        id,
       }),
     });
 
@@ -142,20 +148,20 @@ export default class Ideas extends Component {
     return item;
   }
 
-  handleChange(event) {
+  handleChange = event => {
     this.setState({
       value: event.target.value,
     });
-  }
+  };
 
-  async handleSubmit(event) {
+  handleSubmit = event => {
     event.preventDefault();
 
     if (this.state.value === '') return;
 
     const { user } = this.props;
 
-    const savedIdea = await fetch('/.netlify/functions/createIdea', {
+    fetch('/.netlify/functions/createIdea', {
       method: 'POST',
       headers: {
         Accept: 'application/json',
@@ -165,19 +171,17 @@ export default class Ideas extends Component {
         idea: this.state.value,
         userId: user._id,
       }),
+    }).then(() => {
+      this.getIdeas();
     });
 
-    console.log('SAVED', await savedIdea.json());
-
     this.setState({ value: '' });
-
-    await this.getIdeas();
-  }
+  };
 
   render() {
     const { user } = this.props;
     const {
-      authenticated,
+      isEditable,
       loading,
       ideas,
       upvotedLocalStorage,
@@ -194,7 +198,7 @@ export default class Ideas extends Component {
           <a href={`https://twitter.com/${user.username}`}>@{user.username}</a>
         </IdeasHeader>
 
-        {authenticated && (
+        {isEditable && (
           <form onSubmit={this.handleSubmit}>
             <IdeaCreator
               placeholder="Your amazing new idea..."
@@ -209,13 +213,9 @@ export default class Ideas extends Component {
             {ideas.map((idea, index) => {
               return (
                 <IdeasListItem key={idea._id}>
-                  {authenticated && (
-                    <IdeasListFront>
-                      <span
-                        role="img"
-                        aria-label="Delete Idea"
-                        onClick={() => this.deleteIdea(idea._id)}
-                      >
+                  {isEditable && (
+                    <IdeasListFront onClick={() => this.deleteIdea(idea._id)}>
+                      <span role="img" aria-label="Delete Idea">
                         🗑
                       </span>
                     </IdeasListFront>
