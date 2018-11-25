@@ -1,5 +1,11 @@
 import React, { Component } from 'react';
 import { navigate } from '@reach/router';
+import LoginButton from '../../components/LoginButton';
+
+import {
+  Hero,
+  HeroHeading,
+} from './styled.js';
 
 export default class HomePage extends Component {
   // After login, navigate user to their profile page.
@@ -11,6 +17,13 @@ export default class HomePage extends Component {
   }
 
   render() {
-    return <div>Welcome, please sign in to create your next idea.</div>;
+    return(
+    <Hero>
+      <HeroHeading>
+      Share your ideas with the world
+      </HeroHeading>
+      <LoginButton/>
+    </Hero>
+    );
   }
 }
