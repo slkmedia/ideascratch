@@ -14,4 +14,9 @@ export const Logo = styled.div`
   @media (min-width: 768px) {
     font-size: 36px;
   }
+
+  a, a:hover, a:focus {
+    color: #333;
+    text-decoration: none;
+  }
 `;
