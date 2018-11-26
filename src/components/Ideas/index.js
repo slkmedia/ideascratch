@@ -111,8 +111,6 @@ export default class Ideas extends Component {
         ideas: ideas,
         ideasUpvoted: ideasUpvoted,
       });
-    } else {
-      console.log('You already upvoted this');
     }
   };
 

@@ -26,8 +26,6 @@ export async function handler(event, context, callback) {
     userId,
   });
 
-  console.log('⚠️ ===ITEM===', item);
-
   await item
     .save()
     .then(() => {
