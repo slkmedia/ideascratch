@@ -57,7 +57,7 @@ export default class Ideas extends Component {
       return;
     }
 
-    const ideas = (await response.json()) || [];
+    const ideas = (await response.json().catch(error => {})) || [];
     const newIdeasUpvoted = [...ideas].map(() => false);
 
     this.setState({
