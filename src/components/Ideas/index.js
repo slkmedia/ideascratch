@@ -9,6 +9,7 @@ import {
   IdeasHeader,
   IdeaCreator,
   IdeaUpvote,
+  IdeasNoneContainer
 } from './styled';
 
 export default class Ideas extends Component {
@@ -213,7 +214,7 @@ export default class Ideas extends Component {
           </div>
         )}
 
-        {!loading && ideas.length !== 0 && (
+        {!loading && ideas.length !== 0 ? (
           <IdeasList>
             {ideas.map((idea, index) => {
               return (
@@ -245,6 +246,10 @@ export default class Ideas extends Component {
               );
             })}
           </IdeasList>
+        ) : (
+          <IdeasNoneContainer>
+            No ideas here <span role="img">🤔</span>
+          </IdeasNoneContainer>
         )}
       </Fragment>
     );

@@ -151,3 +151,10 @@ export const IdeaUpvote = styled.button`
     }
   }
 `;
+
+export const IdeasNoneContainer = styled.div`
+  color: #333;
+  font-size: 24px;
+  text-align: center;
+  padding: 40px 0;
+`;

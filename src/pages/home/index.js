@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { navigate } from '@reach/router';
 import LoginButton from '../../components/LoginButton';
 
-import { Hero, HeroHeading } from './styled.js';
+import { Hero, HeroHeading, ProfileButton } from './styled.js';
 
 export default class HomePage extends Component {
   // After login, navigate user to their profile page.
@@ -14,10 +14,16 @@ export default class HomePage extends Component {
   }
 
   render() {
+    const { loggedInUser } = this.props;
     return (
       <Hero>
         <HeroHeading>Share your ideas with the world</HeroHeading>
-        <LoginButton />
+        {!loggedInUser ? 
+        (<LoginButton />)  :(
+          <ProfileButton href={"/" + loggedInUser.nickname.toLowerCase()}>
+            Go to your Profile
+          </ProfileButton>
+        )}
       </Hero>
     );
   }
