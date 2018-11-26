@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 
 import { logout } from '../../utils/auth';
+import { Link } from '@reach/router';
+
 import {
   ProfileMenuContainer,
   ProfileMenuButton,
@@ -38,7 +40,8 @@ export default class ProfileMenu extends Component {
 
   render() {
     const { isOpen } = this.state;
-    const { imgSrc } = this.props;
+    const { imgSrc, profile} = this.props;
+
     return (
       <ProfileMenuContainer ref={this.ref}>
         <ProfileMenuButton onClick={this.handleClick}>
@@ -47,7 +50,10 @@ export default class ProfileMenu extends Component {
         {isOpen && (
           <ProfileMenuDropDown>
             <li>
-              <button onClick={logout}>Logout</button>
+              <Link to={"/" + profile.nickname}>Profile</Link>
+            </li>
+            <li>
+              <a onClick={logout}>Logout</a>
             </li>
           </ProfileMenuDropDown>
         )}

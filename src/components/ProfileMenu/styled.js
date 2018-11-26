@@ -66,11 +66,8 @@ export const ProfileMenuDropDown = styled.ul`
   top: 64px;
   width: 180px;
 
-  li:not(:last-child) {
-    border-bottom: 1px solid #ccc;
-  }
-
-  button {
+  a {
+    color: #333;
     display: block;
     width: 100%;
     padding: 12px 16px;
@@ -78,10 +75,16 @@ export const ProfileMenuDropDown = styled.ul`
     background-color: transparent;
     transition: all 0.2s ease-in-out;
     cursor: pointer;
+    width: calc(180px - 32px);
 
     &:hover,
     &:focus {
       background-color: #ccc;
+      text-decoration: none;
     }
+  }
+
+  li:not(:last-child) {
+    border-bottom: 1px solid #ccc;
   }
 `;

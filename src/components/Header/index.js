@@ -21,7 +21,7 @@ export default function Header({ profile }) {
         <Link to="/">IdeaScratch</Link>
       </Logo>
       {isAuthenticated() ? (
-        <ProfileMenu imgSrc={getProfileImage(profile)} />
+        <ProfileMenu imgSrc={getProfileImage(profile)}  profile={profile}/>
       ) : (
         !isHome && <LoginButton />
       )}
