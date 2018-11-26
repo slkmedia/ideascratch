@@ -4,7 +4,7 @@ export async function handler(event, context, callback) {
   context.callbackWaitsForEmptyEventLoop = false;
 
   const payload = JSON.parse(event.body);
-  const twitterUsername = payload.twitterUsername;
+  const twitterUsername = payload.twitterUsername.toLowerCase();
   const twitterName = payload.twitterName;
   const twitterId = payload.twitterId;
 
