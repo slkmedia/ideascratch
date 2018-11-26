@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {Component} from 'react';
 
 import { isAuthenticated } from '../../utils/auth';
 import LoginButton from '../LoginButton';
@@ -12,7 +12,9 @@ const DEFAULT_PROFILE_IMAGE =
 const getProfileImage = profile =>
   profile ? profile.picture || DEFAULT_PROFILE_IMAGE : DEFAULT_PROFILE_IMAGE;
 
-export default function Header({ profile }) {
+const isHome = window.location.pathname === '/';
+
+export default function Header({ profile, isHome }) {
   return (
     <HeaderContainer>
       <Logo>
@@ -21,7 +23,8 @@ export default function Header({ profile }) {
       {isAuthenticated() ? (
         <ProfileMenu imgSrc={getProfileImage(profile)} />
       ) : (
-        <LoginButton />
+        isHome && 
+          <LoginButton />
       )}
     </HeaderContainer>
   );
