@@ -18,7 +18,7 @@ export async function handler(event, context, callback) {
 
   const { Idea } = await getModels();
 
-  Idea.find({ userId })
+  await Idea.find({ userId })
     .then(ideas => {
       callback(null, {
         statusCode: 200,
