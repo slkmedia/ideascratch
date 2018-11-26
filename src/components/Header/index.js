@@ -14,7 +14,7 @@ const getProfileImage = profile =>
 
 const isHome = window.location.pathname === '/';
 
-export default function Header({ profile, isHome }) {
+export default function Header({ profile }) {
   return (
     <HeaderContainer>
       <Logo>
@@ -23,8 +23,7 @@ export default function Header({ profile, isHome }) {
       {isAuthenticated() ? (
         <ProfileMenu imgSrc={getProfileImage(profile)} />
       ) : (
-        isHome && 
-          <LoginButton />
+        !isHome && <LoginButton />
       )}
     </HeaderContainer>
   );
