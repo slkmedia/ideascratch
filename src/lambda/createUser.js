@@ -27,7 +27,7 @@ export async function handler(event, context, callback) {
     twitterId,
   });
 
-  item
+  await item
     .save()
     .then(() => {
       callback(null, {

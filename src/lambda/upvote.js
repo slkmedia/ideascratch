@@ -23,7 +23,7 @@ export async function handler(event, context, callback) {
     ideaItem = idea;
   });
 
-  ideaItem
+  await ideaItem
     .save()
     .then(() => {
       callback(null, {

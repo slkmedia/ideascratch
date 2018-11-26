@@ -12,7 +12,7 @@ export async function handler(event, context, callback) {
 
   ideaItem = await Idea.findByIdAndDelete(id);
 
-  ideaItem
+  await ideaItem
     .save()
     .then(() => {
       callback(null, {
