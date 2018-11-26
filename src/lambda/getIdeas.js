@@ -22,7 +22,7 @@ export async function handler(event, context, callback) {
     .then(ideas => {
       callback(null, {
         statusCode: 200,
-        body: JSON.stringify(ideas),
+        body: JSON.stringify(ideas || []),
       });
     })
     .catch(error => {
