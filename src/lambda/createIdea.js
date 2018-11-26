@@ -28,7 +28,7 @@ export async function handler(event, context, callback) {
 
   console.log('⚠️ ===ITEM===', item);
 
-  item
+  await item
     .save()
     .then(() => {
       callback(null, {
