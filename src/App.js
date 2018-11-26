@@ -15,9 +15,7 @@ class App extends Component {
   };
 
   async componentDidMount() {
-    const loggedInUser = await getProfile().catch(error => {
-      console.error('Could not fetch profile', error);
-    });
+    const loggedInUser = await getProfile().catch(error => {});
 
     if (!loggedInUser) return;
 
@@ -27,9 +25,7 @@ class App extends Component {
 
     const response = await fetch(
       `/.netlify/functions/getUser?username=${twitterUsername}`,
-    ).catch(error => {
-      throw new Error('Unable to fetch user.');
-    });
+    ).catch(error => {});
 
     if (!response.ok) return;
 

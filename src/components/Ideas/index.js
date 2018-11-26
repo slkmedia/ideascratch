@@ -12,18 +12,15 @@ import {
 } from './styled';
 
 export default class Ideas extends Component {
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      isEditable: false,
-      loading: true,
-      ideas: [],
-      ideasUpvoted: [],
-      upvotedLocalStorage: window.localStorage.getItem('upvoted') || '',
-      value: '',
-    };
-  }
+  state = {
+    isEditable: false,
+    loading: true,
+    error: null,
+    ideas: [],
+    ideasUpvoted: [],
+    upvotedLocalStorage: window.localStorage.getItem('upvoted') || '',
+    value: '',
+  };
 
   async componentDidMount() {
     // Initiate local storage item if not already created
@@ -46,24 +43,27 @@ export default class Ideas extends Component {
         isEditable: user.twitterId === twitterId,
       };
     }
+    return {};
   }
 
   async getIdeas() {
     const { user } = this.props;
     const response = await fetch(
       `/.netlify/functions/getIdeas?userId=${user._id}`,
-    ).catch(error => {
-      throw new Error('Unable to fetch ideas.');
-    });
+    ).catch(error => {});
 
-    if (!response.ok) throw new Error('Unable to fetch ideas.');
+    if (!response.ok) {
+      this.setState({ error: 'Unable to fetch ideas.' });
+      return;
+    }
 
-    const json = await response.json();
-    const newIdeasUpvoted = [...json.msg].map(() => false);
+    const ideas = (await response.json()) || [];
+    const newIdeasUpvoted = [...ideas].map(() => false);
 
     this.setState({
-      ideas: json.msg,
       loading: false,
+      error: null,
+      ideas,
       ideasUpvoted: [...this.state.ideasUpvoted, ...newIdeasUpvoted],
     });
   }
@@ -183,6 +183,7 @@ export default class Ideas extends Component {
     const {
       isEditable,
       loading,
+      error,
       ideas,
       upvotedLocalStorage,
       value,
@@ -208,7 +209,13 @@ export default class Ideas extends Component {
           </form>
         )}
 
-        {!loading && (
+        {error && (
+          <div>
+            <strong>Error:</strong> {error}
+          </div>
+        )}
+
+        {!loading && ideas.length !== 0 && (
           <IdeasList>
             {ideas.map((idea, index) => {
               return (

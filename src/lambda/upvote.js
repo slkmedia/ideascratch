@@ -1,43 +1,39 @@
-require('dotenv').config();
-const mongoose = require('mongoose');
-
-let conn = null;
+import getModels from './utils/mongo/getModels';
 
 export async function handler(event, context, callback) {
-
   context.callbackWaitsForEmptyEventLoop = false;
 
-  if(conn === null){
-    conn = await mongoose.createConnection(
-      process.env.MONGO_URI, {
-      useNewUrlParser: true,
-      bufferCommands: false, 
-      bufferMaxEntries: 0 
-    });
+  const payload = JSON.parse(event.body);
+  const id = payload.id.trim();
 
-    conn.model('Idea', {
-      name: String,
-      upvotes: Number
-    });
-  }
+  const { Idea } = await getModels();
 
-  const id = JSON.parse(event.body).id.trim();
-  
-  const ideasModel = conn.model('Idea');
-  
   let ideaItem;
-  
-  await ideasModel.findById(id, function(err, idea){
+
+  await Idea.findById(id, function(error, idea) {
+    if (error) {
+      callback(null, {
+        statusCode: 500,
+        body: JSON.stringify(error),
+      });
+      return;
+    }
+
     idea.upvotes = idea.upvotes + 1;
-  
     ideaItem = idea;
-  })
-  
-  ideaItem.save().then(() => {
-    console.log('idea Created')
-  })
-  
-  callback(null, {
-    statusCode: 200,
   });
+
+  ideaItem
+    .save()
+    .then(() => {
+      callback(null, {
+        statusCode: 200,
+      });
+    })
+    .catch(error => {
+      callback(null, {
+        statusCode: 500,
+        body: JSON.stringify(error),
+      });
+    });
 }
