@@ -10,7 +10,7 @@ export default class TermsOfService extends Component {
         <p>Last updated: November 27, 2018</p>
 
 
-        <p>Please read these Terms of Service ("Terms", "Terms of Service") carefully before using the https://ideascratch.com website (the "Service") operated by IdeaScratch ("us", "we", or "our").</p>
+        <p>Please read these Terms of Service ("Terms", "Terms of Service") carefully before using the https://ideascratch.com website (the "Service") operated by SLK Media ("us", "we", or "our").</p>
 
         <p>Your access to and use of the Service is conditioned on your acceptance of and compliance with these Terms. These Terms apply to all visitors, users and others who access or use the Service.</p>
 
@@ -64,7 +64,7 @@ export default class TermsOfService extends Component {
 
         <h2>Contact Us</h2>
 
-        <p>If you have any questions about these Terms, please contact us.</p>
+        <p>If you have any questions about these Terms, please contact us at <a href="mailto:team@slk.media">team@slk.media</a>.</p>
       </Fragment>
     );
   }
