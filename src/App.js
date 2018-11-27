@@ -8,6 +8,7 @@ import Footer from './components/Footer';
 import HomePage from './pages/home';
 import ProfilePage from './pages/profile';
 import CallbackPage from './pages/callback';
+import TermsOfService from './pages/terms-of-service';
 
 class App extends Component {
   state = {
@@ -58,6 +59,7 @@ class App extends Component {
           <HomePage loggedInUser={loggedInUser} path="/" />
           <ProfilePage loggedInUser={loggedInUser} path="/:username" />
           <CallbackPage path="/callback" />
+          <TermsOfService path="/terms-of-service"/>
         </Router>
         <Footer />
       </Container>
