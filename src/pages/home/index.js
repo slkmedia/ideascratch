@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import { navigate } from '@reach/router';
 import LoginButton from '../../components/LoginButton';
 
@@ -14,17 +14,21 @@ export default class HomePage extends Component {
   }
 
   render() {
-    const { loggedInUser } = this.props;
+    const { loggedInUser, loaded } = this.props;
     return (
-      <Hero>
-        <HeroHeading>Share your ideas with the world</HeroHeading>
-        {!loggedInUser ? 
-        (<LoginButton />)  :(
-          <ProfileButton href={"/" + loggedInUser.nickname.toLowerCase()}>
-            Go to your Profile
-          </ProfileButton>
-        )}
-      </Hero>
+      <Fragment>
+        {!loaded && 
+        <Hero>
+          <HeroHeading>Share your ideas with the world</HeroHeading>
+          {!loggedInUser ? 
+          (<LoginButton />)  :(
+            <ProfileButton href={"/" + loggedInUser.nickname.toLowerCase()}>
+              Go to your Profile
+            </ProfileButton>
+          )}
+        </Hero>
+        }
+      </Fragment>
     );
   }
 }

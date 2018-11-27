@@ -5,7 +5,8 @@ import User404 from '../../components/User404';
 export default class ProfilePage extends Component {
   state = {
     user: null,
-    username: null
+    username: null,
+    loading: true,
   };
 
   async componentDidMount() {
@@ -25,15 +26,23 @@ export default class ProfilePage extends Component {
 
     const user = await response.json();
 
+    if(user){
+      this.setState({
+        loading: false
+      })
+    }
+
     this.setState({ user });
   }
 
   render() {
     const { loggedInUser } = this.props;
-    const { user, username } = this.state;
+    const { user, username, loading } = this.state;
     return (
       <Fragment>
-        {user ? <Ideas user={user} loggedInUser={loggedInUser} /> : <User404 username={username}/>}
+        {!loading && 
+        (user ? <Ideas user={user} loggedInUser={loggedInUser} /> : <User404 username={username}/>)
+        }
       </Fragment>
     );
   }

@@ -13,6 +13,7 @@ import TermsOfService from './pages/terms-of-service';
 class App extends Component {
   state = {
     loggedInUser: null,
+    loading: true,
   };
 
   async componentDidMount() {
@@ -28,7 +29,12 @@ class App extends Component {
       `/.netlify/functions/getUser?username=${twitterUsername}`,
     ).catch(error => {});
 
-    if (!response.ok) return;
+    if (!response.ok) {
+      this.setState({
+        loading: false
+      })
+      return;
+    }
 
     const user = await response.json();
 
@@ -47,20 +53,25 @@ class App extends Component {
       });
     }
 
-    this.setState({ loggedInUser });
+    this.setState({ 
+      loggedInUser,
+      loading: false
+    });
   }
 
   render() {
-    const { loggedInUser } = this.state;
+    const { loggedInUser, loading } = this.state;
     return (
       <Container>
         <Header profile={loggedInUser} />
+        
         <Router>
           <HomePage loggedInUser={loggedInUser} path="/" />
-          <ProfilePage loggedInUser={loggedInUser} path="/:username" />
+          <ProfilePage loggedInUser={loggedInUser} path="/:username" loaded={loading} />
           <CallbackPage path="/callback" />
           <TermsOfService path="/terms-of-service"/>
         </Router>
+        
         <Footer />
       </Container>
     );
