@@ -50,7 +50,7 @@ export default class ProfileMenu extends Component {
         {isOpen && (
           <ProfileMenuDropDown>
             <li>
-              <Link to={"/" + profile.nickname}>Profile</Link>
+              <a href={"/" + profile.nickname}>Profile</a>
             </li>
             <li>
               <a onClick={logout}>Logout</a>
