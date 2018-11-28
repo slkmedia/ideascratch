@@ -9,9 +9,19 @@ export default class ProfilePage extends Component {
     loading: true,
   };
 
-  async componentDidMount() {
+  componentDidMount() {
     const { username } = this.props;
+    this.fetchUser(username);
+  }
 
+  componentDidUpdate(prevProps) {
+    const { username } = this.props;
+    if (prevProps.username !== username) {
+      this.fetchUser(username);
+    }
+  }
+
+  async fetchUser(username) {
     this.setState({
       username,
     });

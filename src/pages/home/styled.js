@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import { Link } from '@reach/router';
 
 export const Hero = styled.div`
   padding: 60px 20px;
@@ -11,7 +12,7 @@ export const HeroHeading = styled.h1`
   font-weight: bold;
 `;
 
-export const ProfileButton = styled.a`
+export const ProfileButton = styled(Link)`
   background-color: #0482ff;
   border: none;
   border-radius: 4px;

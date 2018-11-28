@@ -10,7 +10,7 @@ export default function HomePage({ loggedInUser, loaded }) {
         <Hero>
           <HeroHeading>Share your ideas with the world</HeroHeading>
           {loggedInUser ? (
-            <ProfileButton href={`/${loggedInUser.nickname.toLowerCase()}`}>
+            <ProfileButton to={`/${loggedInUser.nickname.toLowerCase()}`}>
               Go to your Profile
             </ProfileButton>
           ) : (

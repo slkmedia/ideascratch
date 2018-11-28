@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { Link } from '@reach/router';
 
 import { logout } from '../../utils/auth';
 import confirmPageLeave from '../../utils/confirmPageLeave';
@@ -49,12 +50,12 @@ export default class ProfileMenu extends Component {
         {isOpen && (
           <ProfileMenuDropDown>
             <li>
-              <a
-                href={'/' + profile.nickname}
+              <Link
+                to={'/' + profile.nickname}
                 onClick={event => confirmPageLeave(event, showPageLeaveWarning)}
               >
                 Profile
-              </a>
+              </Link>
             </li>
             <li>
               <a
