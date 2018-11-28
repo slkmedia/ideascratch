@@ -5,6 +5,7 @@ import { getProfile } from './utils/auth';
 import Container from './components/Container';
 import Header from './components/Header';
 import Footer from './components/Footer';
+import GoogleAnalytics from './components/GoogleAnalytics';
 import HomePage from './pages/home';
 import ProfilePage from './pages/profile';
 import CallbackPage from './pages/callback';
@@ -77,6 +78,8 @@ class App extends Component {
           <TermsOfServicePage path="/terms-of-service" />
           <PrivacyPolicyPage path="/privacy-policy" />
         </Router>
+
+        <GoogleAnalytics />
 
         <Footer />
       </Container>

@@ -10,6 +10,7 @@
     "mongoose": "^5.3.12",
     "react": "^16.6.1",
     "react-dom": "^16.6.1",
+    "react-ga": "^2.5.5",
     "styled-components": "^4.0.3"
   },
   "devDependencies": {
