@@ -9,7 +9,7 @@ import {
   IdeasHeader,
   IdeaCreator,
   IdeaUpvote,
-  IdeasNoneContainer
+  IdeasNoneContainer,
 } from './styled';
 
 export default class Ideas extends Component {
@@ -248,7 +248,10 @@ export default class Ideas extends Component {
           </IdeasList>
         ) : (
           <IdeasNoneContainer>
-            No ideas here <span role="img">🤔</span>
+            No ideas here{' '}
+            <span role="img" aria-label="thinking emoji">
+              🤔
+            </span>
           </IdeasNoneContainer>
         )}
       </Fragment>

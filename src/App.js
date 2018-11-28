@@ -8,7 +8,7 @@ import Footer from './components/Footer';
 import HomePage from './pages/home';
 import ProfilePage from './pages/profile';
 import CallbackPage from './pages/callback';
-import TermsOfService from './pages/terms-of-service';
+import TermsOfServicePage from './pages/terms-of-service';
 
 class App extends Component {
   state = {
@@ -31,8 +31,8 @@ class App extends Component {
 
     if (!response.ok) {
       this.setState({
-        loading: false
-      })
+        loading: false,
+      });
       return;
     }
 
@@ -53,9 +53,9 @@ class App extends Component {
       });
     }
 
-    this.setState({ 
+    this.setState({
       loggedInUser,
-      loading: false
+      loading: false,
     });
   }
 
@@ -64,14 +64,18 @@ class App extends Component {
     return (
       <Container>
         <Header profile={loggedInUser} />
-        
+
         <Router>
           <HomePage loggedInUser={loggedInUser} path="/" />
-          <ProfilePage loggedInUser={loggedInUser} path="/:username" loaded={loading} />
+          <ProfilePage
+            loggedInUser={loggedInUser}
+            path="/:username"
+            loaded={loading}
+          />
           <CallbackPage path="/callback" />
-          <TermsOfService path="/terms-of-service"/>
+          <TermsOfServicePage path="/terms-of-service" />
         </Router>
-        
+
         <Footer />
       </Container>
     );

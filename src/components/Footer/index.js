@@ -1,19 +1,20 @@
 import React from 'react';
 
-import { 
-  Footer,
+import {
+  FooterContainer,
   CoffeeButton,
   Legal,
   CreatedBy,
-  FooterLeft
+  FooterLeft,
 } from './styled';
 
-export default () => {
+export default function Footer() {
   return (
-    <Footer>
+    <FooterContainer role="contentinfo">
       <FooterLeft>
         <CreatedBy>
-          Created by <a href="https://twitter.com/designbykyle">@designbykyle</a> &{' '}
+          Created by{' '}
+          <a href="https://twitter.com/designbykyle">@designbykyle</a> &{' '}
           <a href="https://twitter.com/sunnysinghio">@sunnysinghio</a>
         </CreatedBy>
         <Legal>
@@ -21,11 +22,18 @@ export default () => {
         </Legal>
       </FooterLeft>
       <div>
-        <CoffeeButton target="_blank" href="https://www.buymeacoffee.com/kylemcd">
-          <img src="https://www.buymeacoffee.com/assets/img/BMC-btn-logo.svg" alt="Buy me a coffee"/>
+        <CoffeeButton
+          target="_blank"
+          href="https://www.buymeacoffee.com/kylemcd"
+          rel="noopener"
+        >
+          <img
+            src="https://www.buymeacoffee.com/assets/img/BMC-btn-logo.svg"
+            alt=""
+          />
           <div>Buy us a coffee</div>
         </CoffeeButton>
       </div>
-    </Footer>
+    </FooterContainer>
   );
-};
+}

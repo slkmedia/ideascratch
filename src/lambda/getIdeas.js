@@ -18,7 +18,8 @@ export async function handler(event, context, callback) {
 
   const { Idea } = await getModels();
 
-  await Idea.find({ userId }).sort({ upvotes: 'desc'})
+  await Idea.find({ userId })
+    .sort({ upvotes: 'desc' })
     .then(ideas => {
       callback(null, {
         statusCode: 200,

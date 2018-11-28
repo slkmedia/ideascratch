@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-export const Footer = styled.div`
+export const FooterContainer = styled.footer`
   align-items: center;
   display: flex;
   flex-direction: column;
@@ -9,7 +9,7 @@ export const Footer = styled.div`
   text-align: center;
   margin: 32px 0;
 
-  @media (min-width: 768px){
+  @media (min-width: 768px) {
     flex-direction: row;
   }
 `;
@@ -51,7 +51,7 @@ export const Legal = styled.span`
   height: 100%;
   padding: 15px 0;
 
-  @media (min-width: 768px){
+  @media (min-width: 768px) {
     border-left: 1px solid #ccc;
     flex-direction: row;
     margin-left: 10px;
@@ -59,8 +59,7 @@ export const Legal = styled.span`
   }
 `;
 
-export const CreatedBy = styled.span`
-`;
+export const CreatedBy = styled.span``;
 
 export const FooterLeft = styled.div`
   align-items: center;
@@ -68,7 +67,7 @@ export const FooterLeft = styled.div`
   display: flex;
   width: 100%;
 
-  @media (min-width: 768px){
+  @media (min-width: 768px) {
     flex-direction: row;
   }
-`
+`;

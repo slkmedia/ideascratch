@@ -13,8 +13,8 @@ export default class ProfilePage extends Component {
     const { username } = this.props;
 
     this.setState({
-      username
-    })
+      username,
+    });
 
     const response = await fetch(
       `/.netlify/functions/getUser?username=${username.toLowerCase()}`,
@@ -26,10 +26,10 @@ export default class ProfilePage extends Component {
 
     const user = await response.json();
 
-    if(user){
+    if (user) {
       this.setState({
-        loading: false
-      })
+        loading: false,
+      });
     }
 
     this.setState({ user });
@@ -40,9 +40,12 @@ export default class ProfilePage extends Component {
     const { user, username, loading } = this.state;
     return (
       <Fragment>
-        {!loading && 
-        (user ? <Ideas user={user} loggedInUser={loggedInUser} /> : <User404 username={username}/>)
-        }
+        {!loading &&
+          (user ? (
+            <Ideas user={user} loggedInUser={loggedInUser} />
+          ) : (
+            <User404 username={username} />
+          ))}
       </Fragment>
     );
   }

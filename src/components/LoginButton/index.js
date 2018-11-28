@@ -1,8 +1,8 @@
 import React from 'react';
 
 import { login } from '../../utils/auth';
-import { LoginButton } from './styled';
+import { BlueButton } from './styled';
 
-export default () => {
-  return <LoginButton onClick={login}>Sign in with Twitter</LoginButton>;
-};
+export default function LoginButton() {
+  return <BlueButton onClick={login}>Sign in with Twitter</BlueButton>;
+}

@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-export const LoginButton = styled.button`
+export const BlueButton = styled.button`
   background-color: #0482ff;
   border: none;
   border-radius: 4px;

@@ -17,7 +17,8 @@ const Container = styled.div`
     color: #0482ff;
     text-decoration: none;
 
-    &:hover {
+    &:hover,
+    &:focus {
       text-decoration: underline;
     }
   }
