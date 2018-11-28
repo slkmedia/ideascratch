@@ -203,8 +203,8 @@ export default class Ideas extends Component {
 
     this.setState(state => ({
       ideas: [
-        ...state.ideas,
         { name: state.value, upvotes: 0, userId: user.id },
+        ...state.ideas,
       ],
     }));
 
