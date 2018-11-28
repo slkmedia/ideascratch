@@ -47,6 +47,7 @@ export default class Ideas extends Component {
 
   componentWillUnmount() {
     window.removeEventListener('beforeunload', this.handleBeforeUnload);
+    isSaving = false;
     this.props.updateSaving(false);
   }
 

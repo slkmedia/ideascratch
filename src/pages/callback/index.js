@@ -9,5 +9,9 @@ const handleCallback = async url => {
 
 export default function CallbackPage({ location }) {
   handleCallback(location.href);
-  return <div>Signing in please wait...</div>;
+  return (
+    <div style={{ padding: 60, textAlign: 'center' }}>
+      <strong>Signing in please wait...</strong>
+    </div>
+  );
 }

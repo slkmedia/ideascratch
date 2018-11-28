@@ -15,11 +15,13 @@ import PrivacyPolicyPage from './pages/privacy-policy';
 class App extends Component {
   state = {
     loggedInUser: null,
-    loading: true,
+    loading: false,
     saving: false,
   };
 
   async componentDidMount() {
+    this.setState({ loading: true });
+
     const loggedInUser = await getProfile().catch(error => {});
 
     if (!loggedInUser) return;
@@ -43,6 +45,8 @@ class App extends Component {
     const user = await response.json();
 
     if (!user) {
+      this.setState({ loggedInUser, loading: true });
+
       await fetch('/.netlify/functions/createUser', {
         method: 'POST',
         headers: {
@@ -56,12 +60,11 @@ class App extends Component {
           email,
         }),
       });
+
+      this.setState({ loading: false });
     }
 
-    this.setState({
-      loggedInUser,
-      loading: false,
-    });
+    if (user) this.setState({ loggedInUser, loading: false });
   }
 
   render() {
@@ -75,7 +78,7 @@ class App extends Component {
           <ProfilePage
             loggedInUser={loggedInUser}
             path="/:username"
-            loaded={loading}
+            loaded={!loading}
             updateSaving={saving => this.setState({ saving })}
           />
           <CallbackPage path="/callback" />
