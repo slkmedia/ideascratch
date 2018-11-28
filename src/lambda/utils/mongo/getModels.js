@@ -19,6 +19,7 @@ export default async function getModels() {
       name: String,
       username: String,
       twitterId: String,
+      email: String,
     });
 
   return { Idea, User };
