@@ -14,6 +14,12 @@ import {
 
 let isSaving = false; // track requests being saved to show page leave confirm
 
+const sortIdeas = (a, b) => {
+  if (a.upvotes > b.upvotes) return -1;
+  if (a.upvotes < b.upvotes) return 1;
+  return -1;
+};
+
 export default class Ideas extends Component {
   state = {
     isEditable: false,
@@ -81,7 +87,7 @@ export default class Ideas extends Component {
     this.setState({
       loading: false,
       error: null,
-      ideas,
+      ideas: ideas.sort(sortIdeas),
       ideasUpvoted: [...this.state.ideasUpvoted, ...newIdeasUpvoted],
     });
   }
@@ -138,7 +144,7 @@ export default class Ideas extends Component {
       window.localStorage.setItem('upvoted', tempStorage);
 
       this.setState({
-        ideas: ideas,
+        ideas,
         ideasUpvoted: ideasUpvoted,
       });
     }
@@ -200,12 +206,13 @@ export default class Ideas extends Component {
     if (this.state.value === '') return;
 
     const { user } = this.props;
+    const createdIndex = this.state.ideas.length;
 
     this.setState(state => ({
       ideas: [
         { name: state.value, upvotes: 0, userId: user.id },
         ...state.ideas,
-      ],
+      ].sort(sortIdeas),
     }));
 
     isSaving = true;
@@ -220,10 +227,16 @@ export default class Ideas extends Component {
         idea: this.state.value,
         userId: user._id,
       }),
-    }).then(() => {
+    }).then(async response => {
       isSaving = false;
       this.props.updateSaving(false);
-      this.getIdeas();
+
+      const createdIdea = await response.json();
+      this.setState(state => ({
+        ideas: state.ideas
+          .map((idea, index) => (index === createdIndex ? createdIdea : idea))
+          .sort(sortIdeas),
+      }));
     });
 
     this.setState({ value: '' });
