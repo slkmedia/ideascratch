@@ -24,7 +24,10 @@ class App extends Component {
 
     const loggedInUser = await getProfile().catch(error => {});
 
-    if (!loggedInUser) return;
+    if (!loggedInUser) {
+      this.setState({ loading: false });
+      return;
+    }
 
     const twitterId = loggedInUser.sub.split('|')[1];
     const twitterName = loggedInUser.name;
