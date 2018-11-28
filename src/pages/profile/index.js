@@ -26,13 +26,10 @@ export default class ProfilePage extends Component {
 
     const user = await response.json();
 
-    if (user) {
-      this.setState({
-        loading: false,
-      });
-    }
-
-    this.setState({ user });
+    this.setState({
+      loading: false,
+      user,
+    });
   }
 
   render() {
