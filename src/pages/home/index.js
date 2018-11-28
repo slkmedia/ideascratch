@@ -8,7 +8,7 @@ export default function HomePage({ loggedInUser, loaded }) {
     <Fragment>
       {!loaded && (
         <Hero>
-          <HeroHeading>Share your ideas with the world</HeroHeading>
+          <HeroHeading>Ask your audience what to build next</HeroHeading>
           {loggedInUser ? (
             <ProfileButton to={`/${loggedInUser.nickname.toLowerCase()}`}>
               Go to your Profile
