@@ -1,6 +1,7 @@
 import React from 'react';
-import { Link } from '@reach/router'
+import { Link } from '@reach/router';
 
+import confirmPageLeave from '../../utils/confirmPageLeave';
 import {
   FooterContainer,
   CoffeeButton,
@@ -9,7 +10,7 @@ import {
   FooterLeft,
 } from './styled';
 
-export default function Footer() {
+export default function Footer({ showPageLeaveWarning }) {
   return (
     <FooterContainer role="contentinfo">
       <FooterLeft>
@@ -19,8 +20,19 @@ export default function Footer() {
           <a href="https://twitter.com/sunnysinghio">@sunnysinghio</a>
         </CreatedBy>
         <Legal>
-          <Link to="/terms-of-service">Terms of Service</Link> &nbsp;&nbsp;
-          <Link to="/privacy-policy">Privacy Policy</Link>
+          <Link
+            to="/terms-of-service"
+            onClick={event => confirmPageLeave(event, showPageLeaveWarning)}
+          >
+            Terms of Service
+          </Link>{' '}
+          &nbsp;&nbsp;
+          <Link
+            to="/privacy-policy"
+            onClick={event => confirmPageLeave(event, showPageLeaveWarning)}
+          >
+            Privacy Policy
+          </Link>
         </Legal>
       </FooterLeft>
       <div>

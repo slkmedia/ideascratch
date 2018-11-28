@@ -16,6 +16,7 @@ class App extends Component {
   state = {
     loggedInUser: null,
     loading: true,
+    saving: false,
   };
 
   async componentDidMount() {
@@ -62,10 +63,10 @@ class App extends Component {
   }
 
   render() {
-    const { loggedInUser, loading } = this.state;
+    const { loggedInUser, loading, saving } = this.state;
     return (
       <Container>
-        <Header profile={loggedInUser} />
+        <Header profile={loggedInUser} showPageLeaveWarning={saving} />
 
         <Router>
           <HomePage loggedInUser={loggedInUser} path="/" />
@@ -73,6 +74,7 @@ class App extends Component {
             loggedInUser={loggedInUser}
             path="/:username"
             loaded={loading}
+            updateSaving={saving => this.setState({ saving })}
           />
           <CallbackPage path="/callback" />
           <TermsOfServicePage path="/terms-of-service" />
@@ -81,7 +83,7 @@ class App extends Component {
 
         <GoogleAnalytics />
 
-        <Footer />
+        <Footer showPageLeaveWarning={saving} />
       </Container>
     );
   }

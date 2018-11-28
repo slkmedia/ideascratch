@@ -36,13 +36,17 @@ export default class ProfilePage extends Component {
   }
 
   render() {
-    const { loggedInUser } = this.props;
+    const { loggedInUser, updateSaving } = this.props;
     const { user, username, loading } = this.state;
     return (
       <Fragment>
         {!loading &&
           (user ? (
-            <Ideas user={user} loggedInUser={loggedInUser} />
+            <Ideas
+              user={user}
+              loggedInUser={loggedInUser}
+              updateSaving={updateSaving}
+            />
           ) : (
             <User404 username={username} />
           ))}

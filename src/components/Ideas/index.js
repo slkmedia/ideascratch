@@ -1,6 +1,6 @@
 import React, { Component, Fragment } from 'react';
 
-import { AccessibleText } from '../ScreenReader';
+import { AccessibleText, AccessibleLabel } from '../ScreenReader';
 import {
   IdeasList,
   IdeasListItem,
@@ -11,6 +11,8 @@ import {
   IdeaUpvote,
   IdeasNoneContainer,
 } from './styled';
+
+let isSaving = false; // track requests being saved to show page leave confirm
 
 export default class Ideas extends Component {
   state = {
@@ -33,6 +35,21 @@ export default class Ideas extends Component {
     }
 
     await this.getIdeas();
+
+    window.addEventListener('beforeunload', this.handleBeforeUnload);
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener('beforeunload', this.handleBeforeUnload);
+    this.props.updateSaving(false);
+  }
+
+  handleBeforeUnload(event) {
+    if (isSaving) {
+      event.preventDefault();
+      event.returnValue =
+        'A request is still processing. Leaving may cause lost changes.';
+    }
   }
 
   // Checks if user is allowed to edit this profile.
@@ -73,10 +90,19 @@ export default class Ideas extends Component {
     let ideasUpvoted = this.state.ideasUpvoted;
     let upvotedLocalArr = this.state.upvotedLocalStorage.split(',');
 
+    if (!ideas[index]._id) {
+      alert(
+        'This idea is still being saved, please wait a moment before upvoting.',
+      );
+      return;
+    }
+
     if (
       ideasUpvoted[index] === false &&
       !upvotedLocalArr.includes(ideas[index]._id)
     ) {
+      isSaving = true;
+      this.props.updateSaving(true);
       fetch('/.netlify/functions/upvote', {
         method: 'POST',
         headers: {
@@ -86,6 +112,9 @@ export default class Ideas extends Component {
         body: JSON.stringify({
           id: ideas[index]._id,
         }),
+      }).then(() => {
+        isSaving = false;
+        this.props.updateSaving(false);
       });
 
       let tempStorage = null;
@@ -116,6 +145,15 @@ export default class Ideas extends Component {
   };
 
   deleteIdea = id => {
+    if (!id) {
+      alert(
+        'This idea is still being saved, please wait a moment before deleting.',
+      );
+      return;
+    }
+
+    isSaving = true;
+    this.props.updateSaving(true);
     fetch('/.netlify/functions/deleteIdea', {
       method: 'POST',
       headers: {
@@ -125,6 +163,9 @@ export default class Ideas extends Component {
       body: JSON.stringify({
         id,
       }),
+    }).then(() => {
+      isSaving = false;
+      this.props.updateSaving(false);
     });
 
     const indexToRemove = this.getItem(id);
@@ -160,6 +201,15 @@ export default class Ideas extends Component {
 
     const { user } = this.props;
 
+    this.setState(state => ({
+      ideas: [
+        ...state.ideas,
+        { name: state.value, upvotes: 0, userId: user.id },
+      ],
+    }));
+
+    isSaving = true;
+    this.props.updateSaving(true);
     fetch('/.netlify/functions/createIdea', {
       method: 'POST',
       headers: {
@@ -171,6 +221,8 @@ export default class Ideas extends Component {
         userId: user._id,
       }),
     }).then(() => {
+      isSaving = false;
+      this.props.updateSaving(false);
       this.getIdeas();
     });
 
@@ -200,11 +252,19 @@ export default class Ideas extends Component {
 
         {isEditable && (
           <form onSubmit={this.handleSubmit}>
+            <AccessibleLabel htmlFor="idea">
+              Your amazing new idea...
+            </AccessibleLabel>
             <IdeaCreator
+              type="text"
+              id="idea"
               placeholder="Your amazing new idea..."
               value={value}
               onChange={this.handleChange}
             />
+            <AccessibleText>
+              <button type="submit">Save</button>
+            </AccessibleText>
           </form>
         )}
 
@@ -218,7 +278,7 @@ export default class Ideas extends Component {
           <IdeasList>
             {ideas.map((idea, index) => {
               return (
-                <IdeasListItem key={idea._id}>
+                <IdeasListItem key={idea._id || idea.name}>
                   {isEditable && (
                     <IdeasListFront onClick={() => this.deleteIdea(idea._id)}>
                       <span role="img" aria-label="Delete Idea">
@@ -246,14 +306,14 @@ export default class Ideas extends Component {
               );
             })}
           </IdeasList>
-        ) : (
+        ) : !loading ? (
           <IdeasNoneContainer>
             No ideas here{' '}
             <span role="img" aria-label="thinking emoji">
               🤔
             </span>
           </IdeasNoneContainer>
-        )}
+        ) : null}
       </Fragment>
     );
   }
