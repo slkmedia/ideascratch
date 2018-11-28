@@ -7,6 +7,7 @@ export async function handler(event, context, callback) {
   const twitterUsername = payload.twitterUsername.toLowerCase();
   const twitterName = payload.twitterName;
   const twitterId = payload.twitterId;
+  const email = payload.email;
 
   if (!twitterName || !twitterId || !twitterUsername) {
     callback(null, {
@@ -25,6 +26,7 @@ export async function handler(event, context, callback) {
     name: twitterName,
     username: twitterUsername,
     twitterId,
+    email,
   });
 
   await item

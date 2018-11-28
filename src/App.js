@@ -27,6 +27,7 @@ class App extends Component {
     const twitterId = loggedInUser.sub.split('|')[1];
     const twitterName = loggedInUser.name;
     const twitterUsername = loggedInUser.nickname.toLowerCase();
+    const email = loggedInUser.email;
 
     const response = await fetch(
       `/.netlify/functions/getUser?username=${twitterUsername}`,
@@ -52,6 +53,7 @@ class App extends Component {
           twitterUsername,
           twitterName,
           twitterId,
+          email,
         }),
       });
     }
