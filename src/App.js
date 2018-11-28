@@ -9,7 +9,7 @@ import HomePage from './pages/home';
 import ProfilePage from './pages/profile';
 import CallbackPage from './pages/callback';
 import TermsOfServicePage from './pages/terms-of-service';
-import PrivacyPolicy from './pages/privacy-policy';
+import PrivacyPolicyPage from './pages/privacy-policy';
 
 class App extends Component {
   state = {
@@ -75,7 +75,7 @@ class App extends Component {
           />
           <CallbackPage path="/callback" />
           <TermsOfServicePage path="/terms-of-service" />
-          <PrivacyPolicy path="/privacy-policy" />
+          <PrivacyPolicyPage path="/privacy-policy" />
         </Router>
 
         <Footer />
