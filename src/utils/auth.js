@@ -15,12 +15,16 @@ export function login() {
   auth0.authorize({ connection: 'twitter' });
 }
 
-export function handleAuthentication() {
+export async function handleAuthentication() {
   return new Promise((resolve, reject) => {
-    auth0.parseHash((error, authResult) => {
+    auth0.parseHash(async (error, authResult) => {
       if (authResult && authResult.accessToken && authResult.idToken) {
         setSession(authResult);
-        window.location = HOME_ROUTE;
+        try {
+          window.location = `/${(await getProfile()).nickname}`;
+        } catch (error) {
+          window.location = HOME_ROUTE;
+        }
       } else if (error) {
         history.replace(HOME_ROUTE);
         reject(error);
