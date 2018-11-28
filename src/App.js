@@ -9,6 +9,7 @@ import HomePage from './pages/home';
 import ProfilePage from './pages/profile';
 import CallbackPage from './pages/callback';
 import TermsOfService from './pages/terms-of-service';
+import PrivacyPolicy from './pages/privacy-policy';
 
 class App extends Component {
   state = {
@@ -70,6 +71,7 @@ class App extends Component {
           <ProfilePage loggedInUser={loggedInUser} path="/:username" loaded={loading} />
           <CallbackPage path="/callback" />
           <TermsOfService path="/terms-of-service"/>
+          <PrivacyPolicy path="/privacy-policy"/>
         </Router>
         
         <Footer />
