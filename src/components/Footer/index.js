@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from '@reach/router'
 
 import {
   FooterContainer,
@@ -18,7 +19,8 @@ export default function Footer() {
           <a href="https://twitter.com/sunnysinghio">@sunnysinghio</a>
         </CreatedBy>
         <Legal>
-          <a href="/terms-of-service">Terms of Service</a>
+          <Link to="/terms-of-service">Terms of Service</Link> &nbsp;&nbsp;
+          <Link to="/privacy-policy">Privacy Policy</Link>
         </Legal>
       </FooterLeft>
       <div>
