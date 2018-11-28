@@ -8,7 +8,7 @@ const auth0 = new auth0Lib.WebAuth({
   clientID: process.env.REACT_APP_AUTH0_CLIENT_ID,
   redirectUri: process.env.REACT_APP_AUTH0_REDIRECT_URI,
   responseType: 'token id_token',
-  scope: 'openid profile',
+  scope: 'openid profile email',
 });
 
 export function login() {
