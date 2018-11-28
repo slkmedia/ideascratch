@@ -20,7 +20,6 @@ export async function handleAuthentication() {
     auth0.parseHash(async (error, authResult) => {
       if (authResult && authResult.accessToken && authResult.idToken) {
         setSession(authResult);
-        console.log('AUTH RESULT', authResult);
         try {
           window.location = `/${(await getProfile()).nickname}`;
         } catch (error) {

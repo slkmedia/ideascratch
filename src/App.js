@@ -24,8 +24,6 @@ class App extends Component {
 
     if (!loggedInUser) return;
 
-    console.log(loggedInUser);
-
     const twitterId = loggedInUser.sub.split('|')[1];
     const twitterName = loggedInUser.name;
     const twitterUsername = loggedInUser.nickname.toLowerCase();
