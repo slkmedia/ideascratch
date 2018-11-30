@@ -10,13 +10,18 @@ export default class ProfilePage extends Component {
   };
 
   componentDidMount() {
-    const { username } = this.props;
-    this.fetchUser(username);
+    const { username, loaded } = this.props;
+    if (loaded) this.fetchUser(username);
   }
 
   componentDidUpdate(prevProps) {
-    const { username } = this.props;
-    if (prevProps.username !== username) {
+    const { username, loaded, loggedInUser } = this.props;
+    const loggedInUsername = loggedInUser && loggedInUser.nickname;
+
+    if (
+      prevProps.username !== username ||
+      (prevProps.loaded !== loaded && loggedInUsername === username)
+    ) {
       this.fetchUser(username);
     }
   }
@@ -24,6 +29,7 @@ export default class ProfilePage extends Component {
   async fetchUser(username) {
     this.setState({
       username,
+      loading: true,
     });
 
     const response = await fetch(
@@ -43,11 +49,12 @@ export default class ProfilePage extends Component {
   }
 
   render() {
-    const { loggedInUser, updateSaving } = this.props;
+    const { loaded, loggedInUser, updateSaving } = this.props;
     const { user, username, loading } = this.state;
     return (
       <Fragment>
-        {!loading &&
+        {loaded &&
+          !loading &&
           (user ? (
             <Ideas
               user={user}
