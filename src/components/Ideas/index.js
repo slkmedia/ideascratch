@@ -10,6 +10,7 @@ import {
   IdeaCreator,
   IdeaUpvote,
   IdeasNoneContainer,
+  IdeasSubTitle
 } from './styled';
 
 let isSaving = false; // track requests being saved to show page leave confirm
@@ -26,9 +27,11 @@ export default class Ideas extends Component {
     loading: true,
     error: null,
     ideas: [],
+    allIdeas: [],
     ideasUpvoted: [],
     upvotedLocalStorage: window.localStorage.getItem('upvoted') || '',
     value: '',
+    shippedIdeas: []
   };
 
   async componentDidMount() {
@@ -43,6 +46,19 @@ export default class Ideas extends Component {
     await this.getIdeas();
 
     window.addEventListener('beforeunload', this.handleBeforeUnload);
+  }
+
+  async getShippedIdeas(ideas){
+    let shippedIdeas = []  ;
+    [...ideas].forEach((idea) => {
+      if(idea.shipped){
+        shippedIdeas.push(idea)
+      }
+    })
+
+    this.setState({
+      shippedIdeas
+    })
   }
 
   componentWillUnmount() {
@@ -82,13 +98,23 @@ export default class Ideas extends Component {
       return;
     }
 
-    const ideas = (await response.json().catch(error => {})) || [];
+    let ideas; 
+
+    const allIdeas = (await response.json().catch(error => {}).then(((unfilteredIdeas) => { 
+      
+      this.getShippedIdeas(unfilteredIdeas)
+
+      ideas = unfilteredIdeas.filter(idea => !idea.shipped) || [];
+
+    }))) || [];
+
     const newIdeasUpvoted = [...ideas].map(() => false);
 
     this.setState({
       loading: false,
       error: null,
       ideas: ideas.sort(sortIdeas),
+      allIdeas,
       ideasUpvoted: [...this.state.ideasUpvoted, ...newIdeasUpvoted],
     });
   }
@@ -151,7 +177,7 @@ export default class Ideas extends Component {
     }
   };
 
-  deleteIdea = id => {
+  deleteIdea = (id, idea) => {
     if (!id) {
       alert(
         'This idea is still being saved, please wait a moment before deleting.',
@@ -159,39 +185,74 @@ export default class Ideas extends Component {
       return;
     }
 
-    isSaving = true;
-    this.props.updateSaving(true);
-    fetch('/.netlify/functions/deleteIdea', {
-      method: 'POST',
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        id,
-      }),
-    }).then(() => {
-      isSaving = false;
-      this.props.updateSaving(false);
-    });
+    if(!idea.shipped){
+      isSaving = true;
+      this.props.updateSaving(true);
+      fetch('/.netlify/functions/deleteIdea', {
+        method: 'POST',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          id,
+        }),
+      }).then(() => {
+        isSaving = false;
+        this.props.updateSaving(false);
+      });
 
-    const indexToRemove = this.getItem(id);
+      const indexToRemove = this.getItem(id, false);
 
-    this.setState({
-      ideas: [
-        ...this.state.ideas.slice(0, indexToRemove),
-        ...this.state.ideas.slice(indexToRemove + 1),
-      ],
-    });
+      this.setState({
+        ideas: [
+          ...this.state.ideas.slice(0, indexToRemove),
+          ...this.state.ideas.slice(indexToRemove + 1),
+        ],
+      });
+    } else {
+      isSaving = true;
+      this.props.updateSaving(true);
+      fetch('/.netlify/functions/deleteIdea', {
+        method: 'POST',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          id,
+        }),
+      }).then(() => {
+        isSaving = false;
+        this.props.updateSaving(false);
+      });
+
+      const indexToRemove = this.getItem(id, true);
+
+      this.setState({
+        ideas: [
+          ...this.state.shippedIdeas.slice(0, indexToRemove),
+          ...this.state.shippedIdeas.slice(indexToRemove + 1),
+        ],
+      });
+    }
   };
 
-  getItem(id) {
+  getItem(id, shipped) {
     let item;
-    [...this.state.ideas].forEach((idea, index) => {
-      if (idea._id === id) {
-        item = index;
-      }
-    });
+    if(shipped){
+      [...this.state.shippedIdeas].forEach((idea, index) => {
+        if (idea._id === id) {
+          item = index;
+        }
+      });
+    } else {
+      [...this.state.ideas].forEach((idea, index) => {
+        if (idea._id === id) {
+          item = index;
+        }
+      });
+    }
     return item;
   }
 
@@ -252,6 +313,7 @@ export default class Ideas extends Component {
       ideas,
       upvotedLocalStorage,
       value,
+      shippedIdeas
     } = this.state;
 
     return (
@@ -289,12 +351,65 @@ export default class Ideas extends Component {
         )}
 
         {!loading && ideas.length !== 0 ? (
-          <IdeasList>
-            {ideas.map((idea, index) => {
-              return (
+          <Fragment>
+            <IdeasSubTitle>On Deck <span role="img">🎯</span></IdeasSubTitle>
+            <IdeasList>
+              {ideas.map((idea, index) => {
+                return (
+                  <IdeasListItem key={idea._id || idea.name}>
+                    {isEditable && (
+                      <Fragment>
+                        <IdeasListFront onClick={() => this.deleteIdea(idea._id, idea)}>
+                          <span role="img" aria-label="Delete Idea">
+                            🗑
+                          </span>
+                        </IdeasListFront>
+                        <IdeasListFront>
+                          <span role="img" aria-label="Ship Idea">
+                            🚀
+                          </span>
+                        </IdeasListFront>
+                      </Fragment>
+                    )}
+                    <IdeasListContainer>
+                      <p>{idea.name}</p>
+                      <IdeaUpvote
+                        onClick={() => this.upvote(ideas, index)}
+                        active={upvotedLocalStorage.includes(idea._id)}
+                        aria-label={`Delete ${idea.name}`}
+                      >
+                        <span>
+                          <AccessibleText as="span">
+                            {idea.name} has{' '}
+                          </AccessibleText>
+                          {idea.upvotes}
+                          <AccessibleText as="span"> upvotes</AccessibleText>
+                        </span>
+                      </IdeaUpvote>
+                    </IdeasListContainer>
+                  </IdeasListItem>
+                );
+              })}
+            </IdeasList>
+          </Fragment>
+        ) : !loading ? (
+          <IdeasNoneContainer>
+            No ideas here{' '}
+            <span role="img" aria-label="thinking emoji">
+              🤔
+            </span>
+          </IdeasNoneContainer>
+        ) : null}
+             
+        {!loading && shippedIdeas.length !== 0 && 
+            <Fragment>
+            <IdeasSubTitle>Shipped <span role="img">🚀</span></IdeasSubTitle>
+              <IdeasList>
+              {shippedIdeas.map((idea, index) => {
+                return (
                 <IdeasListItem key={idea._id || idea.name}>
                   {isEditable && (
-                    <IdeasListFront onClick={() => this.deleteIdea(idea._id)}>
+                    <IdeasListFront onClick={() => this.deleteIdea(idea._id, idea)}>
                       <span role="img" aria-label="Delete Idea">
                         🗑
                       </span>
@@ -317,17 +432,11 @@ export default class Ideas extends Component {
                     </IdeaUpvote>
                   </IdeasListContainer>
                 </IdeasListItem>
-              );
-            })}
-          </IdeasList>
-        ) : !loading ? (
-          <IdeasNoneContainer>
-            No ideas here{' '}
-            <span role="img" aria-label="thinking emoji">
-              🤔
-            </span>
-          </IdeasNoneContainer>
-        ) : null}
+                )
+              })}
+              </IdeasList>
+             </Fragment>
+          }
       </Fragment>
     );
   }

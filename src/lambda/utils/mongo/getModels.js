@@ -11,6 +11,7 @@ export default async function getModels() {
       upvotes: Number,
       twitterId: String,
       twitterName: String,
+      shipped: Boolean
     });
 
   const User =

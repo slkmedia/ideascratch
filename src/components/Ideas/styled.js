@@ -158,3 +158,7 @@ export const IdeasNoneContainer = styled.div`
   text-align: center;
   padding: 40px 0;
 `;
+
+export const IdeasSubTitle = styled.h3`
+  margin-top: 30px;
+`;

@@ -24,6 +24,7 @@ export async function handler(event, context, callback) {
     name: idea,
     upvotes: 0,
     userId,
+    shipped: false,
   });
 
   await item
