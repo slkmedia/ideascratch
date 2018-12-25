@@ -1,6 +1,7 @@
 import React, { Fragment } from 'react';
 
 import LoginButton from '../../components/LoginButton';
+import MakerAds from '../../components/MakerAds';
 import { Hero, HeroHeading, ProfileButton } from './styled.js';
 
 export default function HomePage({ loggedInUser, loaded }) {
@@ -18,6 +19,7 @@ export default function HomePage({ loggedInUser, loaded }) {
           )}
         </Hero>
       )}
+      <MakerAds />
     </Fragment>
   );
 }
